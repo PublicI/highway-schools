@@ -1,0 +1,8 @@
+node_modules
+config.yml
+dist
+.awspublish-iw-files
+src/style/style.css
+src/data/hpms/extracts
+src/data/hpms/downloads/*.zip
+src/img/schools/*.png
