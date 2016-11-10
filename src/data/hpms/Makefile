@@ -3,7 +3,7 @@ DIR=.
 all: download extract load clean
 
 download:
-	wget -P $(DIR)/downloads -r -l 2 -H -t 1 -nd -N -np -e robots=off --accept-regex 2013 http://www.fhwa.dot.gov/policyinformation/hpms/shapefiles.cfm; \
+	wget -P $(DIR)/downloads -r -l 2 -H -t 1 -nd -N -np -e robots=off --accept-regex 2015 http://www.fhwa.dot.gov/policyinformation/hpms/shapefiles.cfm; \
 	rm $(DIR)/downloads/shapefiles.cfm
 
 extract:
