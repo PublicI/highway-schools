@@ -1,1 +1,0 @@
-shp2pgsql -W latin1 -I -s 4326 nhpnv14-05shp/NHPNLine.shp roads | psql -d carbonwars -q;
