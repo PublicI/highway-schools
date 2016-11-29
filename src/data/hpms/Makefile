@@ -6,16 +6,23 @@ download:
 	wget -P $(DIR)/downloads -r -l 2 -H -t 1 -nd -N -np -e robots=off --accept-regex 2014 http://www.fhwa.dot.gov/policyinformation/hpms/shapefiles.cfm; \
 	rm $(DIR)/downloads/shapefiles.cfm
 
-load:
+extract:
 	mkdir $(DIR)/extracts/; \
-	FLAGS="-a"; \
 	for file in $(DIR)/downloads/*.zip; do \
-		extract_dir=$(DIR)/extracts/$$(basename "$$file" .zip); \
-		unzip -u -d "$$extract_dir" $$file; \
-		for file2 in "$$extract_dir"/*.shp; do \
-			echo "$$file2"; \
-			shp2pgsql $$FLAGS -s 4326 "$$file2" roadswithtraffic14 | psql -q; \
-			FLAGS="-a"; \
-			rm -rf $$extract_dir; \
-		done; \
+		unzip -u -d $(DIR)/extracts/$$(basename "$$file" .zip) $$file; \
 	done
+
+load:
+	FLAGS="-a"; \
+	for file in $(DIR)/extracts/*; do \
+		if [ -d "$$file" ]; then \
+			for file2 in "$$file"/*.shp; do \
+				echo "$$file2"; \
+				shp2pgsql $$FLAGS -s 4326 "$$file2" roadswithtraffic14 | psql -d carbonwars -q; \
+				FLAGS="-a"; \
+			done; \
+		fi; \
+	done
+
+clean:
+	rm -rf ./$(DIR)/extracts/
