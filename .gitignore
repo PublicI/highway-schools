@@ -4,6 +4,8 @@ dist
 .awspublish-iw-files
 src/style/style.css
 src/data/hpms/extracts
+src/data/cscd
+!src/data/cscd/load.sh
 src/data/**/*.zip
 src/data/**/*.csv
 src/data/**/*.txt
