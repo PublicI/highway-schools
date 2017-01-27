@@ -10,4 +10,5 @@ src/data/**/*.zip
 src/data/**/*.csv
 src/data/**/*.txt
 src/data/*.csv
+src/data/**/*.osm
 src/img/schools/*.png

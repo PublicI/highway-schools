@@ -32,6 +32,7 @@
     "json-loader": "0.5.2",
     "less-middleware": "^2.0.1",
     "morgan": "~1.6.1",
+    "pg": "^6.1.2",
     "pym.js": "^0.4.5",
     "queue-async": "^1.0.7",
     "ractive": "^0.7.3",

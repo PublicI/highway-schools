@@ -6,3 +6,12 @@ aws:
 
 google:
     key: 
+
+development:
+    db:
+        driver: 
+        user: 
+        pass: 
+        host: 
+        port: 
+        name: 
