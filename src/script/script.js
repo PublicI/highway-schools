@@ -1,65 +1,23 @@
-var Ractive = require('ractive');
+var Vue = require('vue/dist/vue.js'),
+    Vuex = require('vuex'),
+    App = require('./view/app'),
+    VueRouter = require('vue-router'),
+    util = require('./lib/util');
 
-Ractive.DEBUG = false;
+Vue.use(Vuex);
+Vue.use(VueRouter);
 
-if (typeof window !== 'undefined') {
-    require('ractive-events-hover');
+App.store = new Vuex.Store({
+    modules: require('./model')
+});
 
-    var pym = require('pym.js');
+var router = new VueRouter({
+    routes: [{
+        path: '/',
+        component: require('./view/nominees')
+    }]
+});
 
-}
+App.router = router;
 
-var app = {
-
-    ractive: null,
-
-    data: null,
-
-    template: null,
-
-    pym: null,
-
-    container: null,
-
-    rendered: function() {
-        if (app.pym) {
-            app.pym.sendHeight();
-        }
-    },
-
-    render: function(cb) {
-        app.data = require('../data/data.json');
-
-        if (typeof document !== 'undefined') {
-            app.pym = pym.Child({
-                polling: 200
-            });
-/*
-            var fonts = WebFont.load({
-                typekit: {
-                    id: 'wtj1rji'
-                }
-            });*/
-
-            app.container = document.querySelector('#highwaySchools');
-        }
-
-        app.ractive = new Ractive({
-            el: app.container,
-            template: require('../template.html'),
-            data: app.data,
-            oncomplete: cb
-        });
-
-        if (typeof window === 'undefined') {
-            cb(app.ractive.toHTML());
-        }
-    }
-
-};
-
-if (typeof window !== 'undefined') {
-    app.render(app.rendered);
-} else {
-    module.exports = app;
-}
+module.exports = new Vue(App);

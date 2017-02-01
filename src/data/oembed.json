@@ -1,0 +1,8 @@
+{
+	"version": "1.0",
+	"type": "rich",
+	"width": "540",
+	"height": "800",
+	"url": "//cloudfront-files-1.publicintegrity.org/apps/2017/01/trump-scotus/embed.html",
+	"html": "<div id=\"trumpScotus\"></div><script src=\"//cloudfront-files-1.publicintegrity.org/apps/2017/01/trump-scotus/embed.js\" type=\"text/javascript\"></script>"
+}
