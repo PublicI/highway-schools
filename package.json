@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@google/maps": "^0.3.1",
+    "@mapbox/sphericalmercator": "^1.0.5",
     "@turf/turf": "^3.8.0",
     "async": "^1.5.2",
     "body-parser": "~1.13.2",
@@ -31,6 +32,7 @@
     "express": "^4.12.3",
     "highland": "^2.10.1",
     "json-loader": "0.5.2",
+    "kdbush": "^1.0.1",
     "less-middleware": "^2.0.1",
     "morgan": "~1.6.1",
     "pg": "^6.1.2",

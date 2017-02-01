@@ -8,17 +8,23 @@ const _ = require('lodash'),
       pg = require('pg'),
       turf = require('@turf/turf'),
       util = require('util'),
-      yaml = require('js-yaml');
+      yaml = require('js-yaml'),
+      kdbush = require('kdbush'),
+      SphericalMercator = require('@mapbox/sphericalmercator');
 
 const bbox = [ -124.4096, 32.5343, -114.1308, 42.0095 ]; // California? also Nevada
 
 const interval = 500;
+
+const z = 14;
 
 const config = yaml.safeLoad(fs.readFileSync(`${__dirname}/../../config.yml`, 'utf8'));
 
 const mapClient = maps.createClient({
     key: config.google.key
 });
+
+const merc = new SphericalMercator();
 
 const pool = new pg.Pool({
     user: config.db.user,
@@ -66,6 +72,8 @@ function placeQuery(location, cb) {
 function computeGrid(points, bbox, size, units, threshold) {
     // console.log('size:',size);
 
+    //console.time('computeGrid');
+
     var finalGrid = turf.featureCollection([]);
 
     let grid = turf.hexGrid(bbox, size, units);
@@ -74,9 +82,19 @@ function computeGrid(points, bbox, size, units, threshold) {
         let centroid = turf.centroid(hex);
         let circle = turf.circle(centroid,size/2,32,units);
 
-        let pointCount = turf.within(points,turf.featureCollection([circle])).features.length;
+        // let pointCount = turf.within(points,turf.featureCollection([circle])).features.length;
 
-        // console.log('points:',pointCount);
+        let circleBbox = turf.bbox(circle);
+        let circlePixels = merc.px(centroid.geometry.coordinates,z);
+        let bboxPixels = [merc.px([circleBbox[0],circleBbox[1]],z),merc.px([circleBbox[2],circleBbox[3]],z)];
+        let radiusPixels = Math.max((Math.abs(bboxPixels[0][0]-
+                                            bboxPixels[1][0])),
+                                    (Math.abs(bboxPixels[0][1]-
+                                            bboxPixels[1][1])));
+
+        let pointCount = points.within(circlePixels[0],circlePixels[1],radiusPixels).length;
+
+        //console.log('points:',pointCount);
 
         if (pointCount > threshold && size >= 0.2) {
             let smallerGrid = computeGrid(points, turf.bbox(circle), size/2, units, threshold);
@@ -101,11 +119,12 @@ function computeGrid(points, bbox, size, units, threshold) {
         }
     });
 
+    //console.timeEnd('computeGrid');
+
     return finalGrid;
 }
 
 // console.log(JSON.stringify(computeGrid(points, bbox, size, units, threshold)));
-
 
 pool.connect(function(err, client, done) {
     if (err) {
@@ -119,15 +138,20 @@ pool.connect(function(err, client, done) {
         }
 
         done();
-
+/*
         let points = turf.featureCollection(result.rows.map(function (row) {
             return turf.feature(JSON.parse(row.point));
+        }));*/
+
+        let pointIndex = kdbush(result.rows.map(function (row) {
+            // console.log(merc.px(JSON.parse(row.point).coordinates,z));
+            return merc.px(JSON.parse(row.point).coordinates,z);
         }));
 
-        let grid = computeGrid(points, bbox, 25, 'miles', 100);
+        let grid = computeGrid(pointIndex, bbox, 25, 'miles', 100);
 
         console.error(grid.features.length);
-
+/*
         let locations = grid.features.map(function (circle) {
             var centroid = turf.getCoord(turf.centroid(circle));
 
@@ -142,6 +166,6 @@ pool.connect(function(err, client, done) {
         async.mapSeries(locations,placeQuery,function () {
             console.error('done');
             //done();
-        });
+        });*/
     });
 });
