@@ -28,7 +28,7 @@ function geocode(school,cb) {
     }, (err, response) => {
         if (err) {
             console.error(err);
-            cb(err);
+            cb(null);
             return;
         }
 
@@ -73,7 +73,7 @@ pool.connect(function(err, client, done) {
         });
 
         q.drain = () => {
-            console.log('done');
+            console.error('done');
         };
 
     });
@@ -91,6 +91,6 @@ fs.createReadStream(`${__dirname}/../data/caschools.csv`)
     })
     .on('end',() => {
         q.drain = () => {
-            console.log('done');
+            console.error('done');
         };
     });*/
