@@ -1,0 +1,27 @@
+<div class="schools">
+    <div v-for="school in schools" class="school">
+        <div class="schoolPhoto">
+            <!-- :style="'background-image: url(img/schools/' + school.ncessch + '.png)'" -->
+            <svg width="100%" height="100%">
+              <defs>
+                <clipPath id="myClip">
+                    <circle cx="50%" cy="50%" r="80px" fill="white" />
+                </clipPath>
+              </defs>
+
+                <image xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="'img/schools/' + school.ncessch + '.png'" width="100%" height="100%" clip-path="url(#myClip)"></image>
+
+                <!-- <circle cx="50%" cy="50%" r="3px" fill="rgba(255,0,0,0.8)" stroke="none" /> -->
+                <circle cx="50%" cy="50%" r="80px" stroke="black" fill="none" style="stroke-width:3px" />
+                <!--  stroke="rgba(255,0,0,0.9)" -->
+                <rect x="0" y="0" width="100%" height="100%" fill="rgba(255,255,255,0.2)" />
+            </svg>
+        </div>
+
+        <div class="description">
+            <strong>{{school.name}}</strong><br>
+            {{school.street}}<br>
+            {{school.city}}, {{school.state}} {{school.zip}}
+        </div>
+    </div>
+</div>

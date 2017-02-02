@@ -149,7 +149,7 @@ gulp.task('copy', function() {
     return gulp.src(['src/img/*'], {
             base: 'src/'
         })
-        .pipe(gulp.dest('dist/' + pkg.version));
+        .pipe(gulp.dest('dist')); // /' + pkg.version
 });
 
 

@@ -4,13 +4,13 @@ var csv = require('csv-parser'),
     async = require('async'),
     yaml = require('js-yaml');
 
-var interval = 2000;
+var interval = 500;
 
 function getImage (school,cb) {
-    var url = 'https://maps.googleapis.com/maps/api/staticmap?center=' + school.latitude +
-                ',' + school.longitude + '&zoom=16&size=400x400&scale=2&maptype=hybrid&key=' + config.google.key;
+    var url = 'https://maps.googleapis.com/maps/api/staticmap?center=' + school.latcode +
+                ',' + school.longcode + '&zoom=16&size=400x400&scale=2&maptype=hybrid&key=' + config.google.key;
 
-    console.log('downloaded ' + school.ncessch + ' at ' + school.latitude + ', ' + school.longitude);
+    console.log('downloaded ' + school.ncessch + ' at ' + school.latcode + ', ' + school.longcode);
 
     var r = request(url);
     r.on('response', function (resp) {
@@ -38,7 +38,7 @@ var config = yaml.safeLoad(fs.readFileSync(__dirname + '/../../config.yml', 'utf
 
 var q = async.queue(getImage,1);
 
-fs.createReadStream(__dirname + '/../data/hightrafficschools.csv')
+fs.createReadStream(__dirname + '/../data/hightrafficschools2.csv')
     .pipe(csv())
     .on('data', function(school) {
         q.push(school);

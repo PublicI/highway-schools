@@ -1,4 +1,4 @@
 
 module.exports = {
-	nominees: require('./nominees')
+	schools: require('./schools')
 };

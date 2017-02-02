@@ -1,4 +1,4 @@
 
 module.exports = {
-    load: require('./load')
+    // load: require('./load')
 };

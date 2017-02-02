@@ -34,7 +34,7 @@ module.exports = {
             pym.sendHeight();
         });*/
         
-        this.retrieve();
+        // this.retrieve();
     },
     watch: {
         '$route.path': function () {

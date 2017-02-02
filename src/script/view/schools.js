@@ -1,4 +1,4 @@
-var template = require('../../view/nominees.html');
+var template = require('../../view/schools.html');
 
 module.exports = {
     data: function () {
@@ -8,7 +8,7 @@ module.exports = {
             }
         };
     },
-    vuex: require('../model/nominees'),
+    vuex: require('../model/schools'),
     render: template.render,
     staticRenderFns: template.staticRenderFns
 };

@@ -14,12 +14,53 @@ html {
     height: auto;
 }
 
+body {
+    background-color: black;
+
+    h1 {
+        color: rgb(240,240,240);
+    }
+}
+
 .highwaySchools {
     .source {
         font-size: 80%;
         line-height: 120%;
         color: #666;
         padding-top: 30px;
+    }
+
+    .school {
+        float: left;
+    }
+
+    .schoolPhoto {
+        width: 400px;
+        height: 400px;
+        background-size: 400px 400px;
+        background-position: center;
+        position: relative;
+
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    .description {
+        font-size: 15px;
+        line-height: 17px;
+        padding-bottom: 10px;
+        padding-left: 5px;
+        background-color: rgba(0,0,0,0.6);
+        color: rgb(240,240,240);
+    }
+
+    .schools:after {
+        content: "";
+        display: table;
+        clear: both;
     }
 }
 
