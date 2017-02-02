@@ -33,7 +33,7 @@ function geocode(school,cb) {
         }
 
         if (response.json.results) {
-            response.json.results.forEach(function (result) {
+            response.json.results.forEach(result => {
                 result.ncessch = school.ncessch;
 
                 console.log(JSON.stringify(result));
@@ -56,19 +56,19 @@ const pool = new pg.Pool({
     port: config.db.port
 });
 
-pool.connect(function(err, client, done) {
+pool.connect((err, client, done) => {
     if (err) {
         return console.error(err);
     }
 
-    client.query('SELECT publicschools1415.ncessch,lstree,lcity,lstate,lzip from publicschools1415 left join geocodes using (ncessch) where geocodes.ncessch is null',[], function(err, result) {
+    client.query('SELECT publicschools1415.ncessch,lstree,lcity,lstate,lzip from publicschools1415 left join geocodes using (ncessch) where geocodes.ncessch is null',[], (err, result) => {
         if (err) {
             return console.error(err);
         }
 
         done();
 
-        result.rows.forEach(function (row) {
+        result.rows.forEach(row => {
             q.push(row);
         });
 
