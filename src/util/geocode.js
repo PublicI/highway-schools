@@ -61,7 +61,7 @@ pool.connect(function(err, client, done) {
         return console.error(err);
     }
 
-    client.query('SELECT publicschools1415.ncessch,lstree,lcity,lstate,lzip from publicschools1415 left join geocodes using (ncessch) where geocodes.ncessch is null',['CA'], function(err, result) {
+    client.query('SELECT publicschools1415.ncessch,lstree,lcity,lstate,lzip from publicschools1415 left join geocodes using (ncessch) where geocodes.ncessch is null',[], function(err, result) {
         if (err) {
             return console.error(err);
         }
