@@ -1,0 +1,1 @@
+python ~/Desktop/s3-parallel-put/s3-parallel-put --bucket=iw-files --prefix=apps/2017/01/highway-schools/img/schools --processes=30 --content-type=image/png --grant=public-read .
