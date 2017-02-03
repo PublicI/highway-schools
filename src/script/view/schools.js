@@ -10,6 +10,9 @@ module.exports = {
             itemsPerPage: 30
         };
     },
+    components: {
+        school: require('./school')
+    },
     vuex: require('../model/schools'),
     render: template.render,
     staticRenderFns: template.staticRenderFns,

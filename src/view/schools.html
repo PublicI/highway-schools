@@ -6,43 +6,7 @@
     <br><br>
 
     <div class="schools">
-        <div v-for="school in schools.slice((page-1)*itemsPerPage,(page-1)*itemsPerPage+itemsPerPage)" class="school">
-            <!--<a :href="'https://www.google.com/maps/place/38%C2%B053\'47.2%22N+77%C2%B002\'16.1%22W/@' + school.latcode + ',' + school.longcode + ',510m/data=!3m1!1e3!4m5!3m4!1s0x0:0x0!8m2!3d38.896436!4d-77.037802'" target="_top">-->
-                <div class="schoolPhoto" :style="'background-image: url(img/schools/' + school.ncessch + '.png)'">
-                    <svg width="100%" height="100%">
-                    <!--
-                      <defs>
-                        <mask id="myMask">
-                            <circle cx="50%" cy="50%" r="80px" fill="none" />
-                        </mask>
-                      </defs>
-                    -->
-
-                        <!--<image xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="'img/schools/' + school.ncessch + '.png'" width="100%" height="100%"></image>-->
-
-                        <path class="maskRect" d="M.25.09v400h400V.09ZM200,280a80,80,0,1,1,80-80A80,80,0,0,1,200,280Z" transform="translate(0.25 0.41)"/>
-
-                        <!-- <path d="M.25.09v300h300V.09ZM150.12,205.83a60,60,0,1,1,60-60A60,60,0,0,1,150.12,205.83Z" transform="translate(0.25 0.41)" class="maskRect"/> -->
-
-
-                        <!-- mask="url(#myMask)" opacity=".5" -->
-
-                        <!-- <circle cx="50%" cy="50%" r="3px" fill="rgba(255,0,0,0.8)" stroke="none" /> -->
-                        <circle cx="50%" cy="50%" r="80px" stroke="black" fill="none" style="stroke-width:3px" />
-                        <!--  stroke="rgba(255,0,0,0.9)" -->
-                        <!--<rect x="0" y="0" width="100%" height="100%" fill="rgba(255,255,255,0.2)" />-->
-                    </svg>
-
-                    <div class="description">
-                        <strong>{{school.name}}</strong><br>
-                        {{school.street}}<br>
-                        {{school.city}}, {{school.state}} {{school.zip}}<br>
-                        #{{school.ncessch}}
-                    </div>
-                </div>
-            <!-- </a> -->
-        </div>
-
+        <school v-for="school in schools.slice((page-1)*itemsPerPage,(page-1)*itemsPerPage+itemsPerPage)" :school="school">
     </div>
 
     <br><br>
