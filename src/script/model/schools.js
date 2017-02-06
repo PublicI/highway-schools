@@ -1,7 +1,9 @@
 module.exports = {
     state: {
         // list: []
-        list: require('dsv!../../data/hightrafficschools2.csv')
+        list: require('dsv!../../data/hightrafficschools2.csv').sort(function (a,b) {
+            return b.aadt-a.aadt;
+        })
     },
     mutations: {
         // TK
