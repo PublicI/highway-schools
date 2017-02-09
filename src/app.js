@@ -11,7 +11,7 @@ var bodyParser = require('body-parser'),
     webpack = require('webpack'),
     webpackMiddleware = require('webpack-dev-middleware');
 
-var nominees = require('./routes/nominees');
+var roads = require('./routes/roads');
 
 var app = express();
 
@@ -68,8 +68,8 @@ var embedCompiler = webpack({
     devtool: 'source-map'
 });
 
-app.use(nominees);
-app.use('/' + pkg.version,nominees);
+app.use(roads);
+app.use('/' + pkg.version,roads);
 
 app.use('/',webpackMiddleware(embedCompiler, {
     noInfo: true
