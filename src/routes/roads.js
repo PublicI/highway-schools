@@ -17,16 +17,28 @@ const ts = new Tilesplash({
     port: config.db.port
 });
 
+const buffer = 152.4;
+
 ts.layer('roads', (tile, render) => {
-    render('SELECT ' +
-            'ST_AsGeoJSON(ST_Union(ST_Intersection(geom::geometry,!bbox_4326!))) AS the_geom_geojson ' +
+    render({
+        hightraffic: 'SELECT ST_AsGeoJSON(ST_Union(ST_Intersection(ST_Buffer(geom,' + buffer + ')::geometry,!bbox_4326!))) AS the_geom_geojson ' +
             'FROM roadswithtraffic14 ' +
-            'WHERE ST_Intersects(geom, !bbox_4326!) ' +
-            'AND aadt > 30000'); // .replace('!area_threshold!',30)
+            'WHERE ST_Intersects(geom, ST_Expand(!bbox_4326!,0.0011)) ' +
+            'AND aadt >= 30000',
+        truckroute: 'SELECT CASE WHEN ST_IsEmpty(ST_Difference(truckroute.geom,hightraffic.geom)) THEN null ELSE ST_AsGeoJSON(COALESCE(ST_Difference(truckroute.geom,hightraffic.geom),truckroute.geom)) END AS the_geom_geojson ' +
+            'FROM (SELECT ST_Union(ST_Intersection(ST_Buffer(geom,' + buffer + ')::geometry,!bbox_4326!)) AS geom ' +
+            'FROM roadswithtraffic14 ' +
+            'WHERE ST_Intersects(geom, ST_Expand(!bbox_4326!,0.0011)) ' +
+            'AND aadt >= 30000) as hightraffic, ' +
+            '(SELECT ST_Union(ST_Intersection(ST_Buffer(geom,' + buffer + ')::geometry,!bbox_4326!)) AS geom ' +
+            'FROM roadswithtraffic14 ' +
+            'WHERE ST_Intersects(geom, ST_Expand(!bbox_4326!,0.0011)) ' +
+            'AND aadt >= 10000 AND aadt_combi+aadt_singl >= 500 AND aadt < 30000) as truckroute'
+    });
 });
 
-express.static.mime.define({'application/json': ['topojson']});
+express.static.mime.define({ 'application/json': ['topojson'] });
 
-router.use('/tiles',ts.server);
+router.use('/tiles', ts.server);
 
 module.exports = router;
