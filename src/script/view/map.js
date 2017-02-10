@@ -36,6 +36,7 @@ module.exports = {
             'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: '&copy; '+mapLink+', '+wholink,
             maxZoom: 18,
+            opacity: 0.85
         }).addTo(vm.map);
 /*
         L.tileLayer('http://tile.stamen.com/toner-background/{z}/{x}/{y}.png', {
@@ -43,10 +44,6 @@ module.exports = {
             opacity: 0.2
         }).addTo(vm.map);*/
 
-        L.tileLayer('http://tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            // opacity: 0
-        }).addTo(vm.map);
 /*
 
         var vectorTileOptions = {
@@ -94,6 +91,11 @@ module.exports = {
                     fill: true
                 }
             }
+        }).addTo(vm.map);
+
+        L.tileLayer('http://tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            opacity: 0.8
         }).addTo(vm.map);
 
         // setInterval(vm.nextSchool,5000);
