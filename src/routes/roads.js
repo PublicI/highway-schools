@@ -18,8 +18,8 @@ const ts = new Tilesplash({
 });
 
 ts.layer('roads', (tile, render) => {
-    render('SELECT gid, ' +
-            'ST_AsGeoJSON(ST_Intersection(geom,!bbox_4326!)) AS the_geom_geojson ' +
+    render('SELECT ' +
+            'ST_AsGeoJSON(ST_Union(ST_Intersection(geom::geometry,!bbox_4326!))) AS the_geom_geojson ' +
             'FROM roadswithtraffic14 ' +
             'WHERE ST_Intersects(geom, !bbox_4326!) ' +
             'AND aadt > 30000'); // .replace('!area_threshold!',30)
