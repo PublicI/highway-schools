@@ -1,7 +1,9 @@
 //jshint esnext:true
 
-const express = require('express'),
-    Tilesplash = require('tilesplash');
+const fs = require('fs'),
+    express = require('express'),
+    Tilesplash = require('tilesplash'),
+    yaml = require('js-yaml');
 
 const config = yaml.safeLoad(fs.readFileSync(`${__dirname}/../../config.yml`, 'utf8'));
 
