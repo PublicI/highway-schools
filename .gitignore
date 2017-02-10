@@ -12,3 +12,4 @@ src/data/**/*.txt
 src/data/*.csv
 src/data/**/*.osm
 src/img/schools/*.png
+!src/data/hightrafficschools2.csv
