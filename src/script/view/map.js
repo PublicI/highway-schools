@@ -38,42 +38,8 @@ module.exports = {
             maxZoom: 18,
             opacity: 0.85
         }).addTo(vm.map);
-/*
-        L.tileLayer('http://tile.stamen.com/toner-background/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            opacity: 0.2
-        }).addTo(vm.map);*/
 
-/*
-
-        var vectorTileOptions = {
-            vectorTileLayerStyles: {
-                vectile: function(properties, zoom) {
-                    var weight = 50,
-                        color = 'rgb(200,0,0)';
-
-                    if (zoom < 17) {
-                        weight = 1;
-                    }
-                    if (properties.truck) {
-                        color = 'orange';
-                    }
-
-                    return {
-                        fillColor: color,
-                        // weight: 1,
-                        // color: 'rgb(200,0,0)',
-                        // opacity: 0.5,
-                        weight: 0,
-                        fillOpacity: 0.5,
-                        fill: true
-                    };
-                }
-            }
-        };*/
-
-        // var pbfLayer = L.vectorGrid.protobuf('http://tile.mapzen.com/mapzen/vector/v1/roads/{z}/{x}/{y}.mvt?api_key=vector-tiles-PuZfnud', vectorTileOptions).addTo(map);
-        var pbfLayer1 = L.vectorGrid.protobuf('tiles/roads/{z}/{x}/{y}.mvt', {
+        var roadLayer = L.vectorGrid.protobuf('tiles/roads/{z}/{x}/{y}.mvt', {
             opacity: 0.4,
             minZoom: 12,
             vectorTileLayerStyles: {
@@ -111,7 +77,7 @@ module.exports = {
           }
         });
 
-        (new GoogleSearch).addTo(vm.map);
+        var gs = (new GoogleSearch()).addTo(vm.map);
 
         var input = document.getElementById("searchBox");
 
@@ -120,7 +86,7 @@ module.exports = {
         searchBox.addListener('places_changed', function() {
           var places = searchBox.getPlaces();
 
-          if (places.length == 0) {
+          if (places.length === 0) {
             return;
           }
 
@@ -129,8 +95,6 @@ module.exports = {
           places.forEach(function(place) {
 
             // Create a marker for each place.
-            console.log(places);
-            console.log(place.geometry.location.lat() + " / " + place.geometry.location.lng());
             var marker = L.marker([
               place.geometry.location.lat(),
               place.geometry.location.lng()
