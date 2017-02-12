@@ -113,7 +113,7 @@ function init(layer,bbox,z,cb) {
                 return;
             }
 
-            cb();
+            cb(null);
         }
         else {
             console.log('done');
