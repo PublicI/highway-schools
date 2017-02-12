@@ -24,10 +24,10 @@ function writeTile(tileDir, json, tile, cb){
 }
 
 function getTile(tile, cb) {
-    fs.exists(tile.dir + '/' + tilePath(tile),function (exists) {
+    // fs.exists(tile.dir + '/' + tilePath(tile),function (exists) {
 
-        if (!exists) {
-            console.log('making ' + tilePath(tile));
+        // if (!exists) {
+            // console.log('making ' + tilePath(tile));
 
             server.handle({
                 method: 'get',
@@ -43,7 +43,12 @@ function getTile(tile, cb) {
 
                 },
                 end: function (buffer,encoding) {
-                    writeTile(tile.dir,buffer,tile,cb);
+                    if (buffer.byteLength > 0) {
+                        writeTile(tile.dir,buffer,tile,cb);
+                    }
+                    else {
+                        cb(null);
+                    }
 
                     this.finish();
                 }
@@ -53,6 +58,7 @@ function getTile(tile, cb) {
             });
 
         }
+/*
         else {
             /*
             console.log('simplifying ' + tilePath(tile));
@@ -70,7 +76,7 @@ function getTile(tile, cb) {
             cb(null);
         }
     });
-
+*/
 }
 
 function init(layer,bbox,z,cb) {

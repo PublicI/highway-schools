@@ -2,8 +2,8 @@ var gentiles = require('./gentiles.js'),
     async = require('async');
 
 var config = {
-    minZoom: 9,
-    maxZoom: 11,
+    minZoom: 14,
+    maxZoom: 14,
     parts: [{
         name: 'Lower 48',
         bbox: [
