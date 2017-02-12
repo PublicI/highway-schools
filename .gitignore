@@ -10,6 +10,7 @@ src/data/**/*.zip
 src/data/**/*.csv
 src/data/**/*.txt
 src/data/*.csv
+src/data/tiles
 src/data/**/*.osm
 src/img/schools/*.png
 !src/data/hightrafficschools2.csv

@@ -41,7 +41,7 @@ module.exports = {
 
         var roadLayer = L.vectorGrid.protobuf('tiles/roads/{z}/{x}/{y}.mvt', {
             opacity: 0.4,
-            minZoom: 12,
+            minZoom: 9,
             vectorTileLayerStyles: {
                 hightraffic: {
                     fillColor: 'red',
