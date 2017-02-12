@@ -1,0 +1,1 @@
+python ~/s3-parallel-put/s3-parallel-put --bucket=iw-files --prefix=/apps/2017/01/highway-schools/tiles/roads --processes=15 --content-type=application/vnd.mapbox-vector-tile --gzip --grant=public-read ../data/tiles/roads
