@@ -56,21 +56,9 @@ function getTile(tile, cb) {
                 if (err) throw err;
                 cb(null);
             });
-
-        }
 /*
+        }
         else {
-            /*
-            console.log('simplifying ' + tilePath(tile));
-
-            readTile(tile.dir,tile,function (err,json) {
-                if (err) throw err;
-
-                tile.layer = tile.layer + '-simplified';
-
-                writeTile(tile.dir,simplifyTile(json,tile),tile,cb);
-            });*/
-
             console.log('skipping ' + tilePath(tile));
 
             cb(null);
