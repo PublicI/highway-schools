@@ -16,32 +16,64 @@ module.exports = {
         nextSchool: function () {
             this.schoolIndex++;
 
-            this.map.setView([this.schools[this.schoolIndex].latcode, this.schools[this.schoolIndex].longcode], 17);
+            this.map.setView([this.schools[this.schoolIndex].latcode, this.schools[this.schoolIndex].longcode], 16);
         }
     },
     mounted: function () {
         var vm = this;
 
         this.map = L.map(vm.$el,{
+            minZoom: 9,
+            maxZoom: 16,
             attributionControl: false
-        }) //.setView([38.901947, -77.039047],17);
-                    .setView([vm.schools[vm.schoolIndex].latcode, vm.schools[vm.schoolIndex].longcode], 17);
-
+        }) //.setView([38.901947, -77.039047],16);
+                    .setView([vm.schools[vm.schoolIndex].latcode, vm.schools[vm.schoolIndex].longcode], 16);
+/*
         var mapLink = 
             '<a href="http://www.esri.com/">Esri</a>';
-
         var wholink = 
-            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';*/
         L.tileLayer(
             'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '&copy; '+mapLink+', '+wholink,
-            maxZoom: 18,
+            // attribution: '&copy; '+mapLink+', '+wholink,
+            minZoom: 9,
+            maxZoom: 13,
             opacity: 0.85
         }).addTo(vm.map);
 
-        var roadLayer = L.vectorGrid.protobuf('tiles/roads/{z}/{x}/{y}.mvt', {
-            opacity: 0.4,
+        L.tileLayer(
+            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            // attribution: '&copy; '+mapLink+', '+wholink,
+            minZoom: 12,
+            maxZoom: 16,
+            opacity: 0.85
+        }).addTo(vm.map);
+
+        var roadLayer = L.vectorGrid.protobuf('http://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
+            opacity: 1,
             minZoom: 9,
+            maxZoom: 13,
+            vectorTileLayerStyles: {
+                hightraffic: {
+                    fillColor: 'red',
+                    weight: 0,
+                    fillOpacity: 1,
+                    fill: true
+                },
+                truckroute: {
+                    fillColor: 'orange',
+                    weight: 0,
+                    color: 'rgb(200,200,200',
+                    fillOpacity: 1,
+                    fill: true
+                }
+            }
+        }).addTo(vm.map);
+
+        var roadLayer2 = L.vectorGrid.protobuf('tiles/roads/{z}/{x}/{y}.mvt', {
+            opacity: 0.4,
+            minZoom: 12,
+            maxZoom: 16,
             vectorTileLayerStyles: {
                 hightraffic: {
                     fillColor: 'red',
