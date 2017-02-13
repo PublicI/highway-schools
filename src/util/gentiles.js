@@ -4,6 +4,8 @@ var async = require('async'),
     fs = require('fs'),
     server = require('../routes/roads');
 
+var tileDir = __dirname + '/../data/tiles';
+
 function tilePath(tile) {
     return tile.layer + '/' + tile.z + '/' + tile.x + '/' + tile.y + '.mvt';
 }
@@ -14,7 +16,7 @@ function readTile(tileDir,tile,cb) {
     fs.readFile(path,'utf8',cb);
 }
 
-function writeTile(tileDir, json, tile, cb){
+function writeTile(json, tile, cb){
     var path = tileDir + '/' + tilePath(tile);
 
     mkdirp(path.split('/').slice(0,-1).join('/'),function () {
@@ -24,7 +26,7 @@ function writeTile(tileDir, json, tile, cb){
 }
 
 function getTile(tile, cb) {
-    // fs.exists(tile.dir + '/' + tilePath(tile),function (exists) {
+    // fs.exists(tileDir + '/' + tilePath(tile),function (exists) {
 
         // if (!exists) {
             // console.log('making ' + tilePath(tile));
@@ -44,7 +46,7 @@ function getTile(tile, cb) {
                 },
                 end: function (buffer,encoding) {
                     if (buffer.byteLength > 0) {
-                        writeTile(tile.dir,buffer,tile,cb);
+                        writeTile(buffer,tile,cb);
                     }
                     else {
                         cb(null);
@@ -69,7 +71,6 @@ function getTile(tile, cb) {
 
 function init(layer,bbox,z,cb) {
 
-    var tileDir = __dirname + '/../data/tiles';
     layer = layer || 'blocks';
     bbox = bbox || [-170.1562,18.1459,-64.5117,72.1818];
     z = z || [11,11];
@@ -89,7 +90,6 @@ function init(layer,bbox,z,cb) {
                 queued++;
 
                 q.push({
-                    dir: tileDir,
                     layer: layer,
                     z: curZ,
                     x: curX,

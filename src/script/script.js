@@ -14,7 +14,7 @@ App.store = new Vuex.Store({
 var router = new VueRouter({
     routes: [{
         path: '/',
-        component: require('./view/map')
+        component: require('./view/mapcontainer')
     }]
 });
 

@@ -1,5 +1,4 @@
-var template = require('../../view/school.html'),
-    SphericalMercator = require('@mapbox/sphericalmercator');
+var template = require('../../view/school.html');
 
 module.exports = {
     data: function () {
@@ -7,9 +6,10 @@ module.exports = {
             pkg: {
                 version: PKG_VERSION
             },
+            /*
             merc: new SphericalMercator({
                 size: 256
-            }),
+            }),*/
             page: 1,
             itemsPerPage: 30
         };
