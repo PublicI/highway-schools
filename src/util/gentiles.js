@@ -72,11 +72,11 @@ function getTile(tile, cb) {
 function genColumn(tile,cb) {
     var q = async.queue(getTile,3);
 
-    for (var curY = (xy.minY-1); curY <= xy.maxY; curY++) {
+    for (var curY = (tile.minY-1); curY <= tile.maxY; curY++) {
         q.push({
-            layer: layer,
-            z: curZ,
-            x: curX,
+            layer: tile.layer,
+            z: tile.z,
+            x: tile.x,
             y: curY
         });
     }
@@ -104,7 +104,9 @@ function init(layer,bbox,z,cb) {
                     layer: layer,
                     z: curZ,
                     x: curX,
-                    y: null //curY
+                    y: null, //curY
+                    minY: xy.minY,
+                    maxY: xy.maxY
                 });
             // }
         }
