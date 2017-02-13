@@ -7,8 +7,7 @@ var async = require('async'),
 var tileDir = __dirname + '/../data/tiles';
 
 function tilePath(tile) {
-    // return tile.layer + '/' + tile.z + '/' + tile.x + '/' + tile.y + '.mvt';
-    return 'roads/' + tile[0] + '/' + tile[1] + '/' + tile[2] + '.mvt';
+    return tile.layer + '/' + tile.z + '/' + tile.x + '/' + tile.y + '.mvt';
 }
 
 function readTile(tileDir,tile,cb) {
@@ -70,6 +69,21 @@ function getTile(tile, cb) {
 */
 }
 
+function genColumn(tile,cb) {
+    var q = async.queue(getTile,3);
+
+    for (var curY = (xy.minY-1); curY <= xy.maxY; curY++) {
+        q.push({
+            layer: layer,
+            z: curZ,
+            x: curX,
+            y: curY
+        });
+    }
+
+    q.drain = cb.bind(null,null);
+}
+
 function init(layer,bbox,z,cb) {
 
     layer = layer || 'blocks';
@@ -80,26 +94,19 @@ function init(layer,bbox,z,cb) {
         size: 256
     });
 
-    var q = async.queue(getTile,3);
-    var queued = 0;
-    var processed = 0;
+    var q = async.queue(genColumn,1);
 
     for (var curZ = z[0]; curZ <= z[1]; curZ++) {
         var xy = merc.xyz(bbox, curZ);
         for (var curX = (xy.minX-1); curX <= xy.maxX; curX++) {
-            for (var curY = (xy.minY-1); curY <= xy.maxY; curY++) {
-                //queued++;
-/*
+            // for (var curY = (xy.minY-1); curY <= xy.maxY; curY++) {
                 q.push({
                     layer: layer,
                     z: curZ,
                     x: curX,
-                    y: curY
-                });*/
-
-                q.push([curZ,curX,curY]);
-
-            }
+                    y: null //curY
+                });
+            // }
         }
     }
 
