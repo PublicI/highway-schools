@@ -7,7 +7,8 @@ var async = require('async'),
 var tileDir = __dirname + '/../data/tiles';
 
 function tilePath(tile) {
-    return tile.layer + '/' + tile.z + '/' + tile.x + '/' + tile.y + '.mvt';
+    // return tile.layer + '/' + tile.z + '/' + tile.x + '/' + tile.y + '.mvt';
+    return 'roads/' + tile[0] + '/' + tile[1] + '/' + tile[2] + '.mvt';
 }
 
 function readTile(tileDir,tile,cb) {
@@ -87,14 +88,16 @@ function init(layer,bbox,z,cb) {
         var xy = merc.xyz(bbox, curZ);
         for (var curX = (xy.minX-1); curX <= xy.maxX; curX++) {
             for (var curY = (xy.minY-1); curY <= xy.maxY; curY++) {
-                queued++;
-
+                //queued++;
+/*
                 q.push({
                     layer: layer,
                     z: curZ,
                     x: curX,
                     y: curY
-                });
+                });*/
+
+                q.push([curZ,curX,curY]);
 
             }
         }
