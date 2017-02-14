@@ -95,7 +95,9 @@ function genGrid(layer,bbox,z) {
 }
 
 function checkGrid(tile,cb) {
-    fs.exists(`${tileDir}/${tilePath(tile)}`,cb);
+    fs.exists(`${tileDir}/${tilePath(tile)}`,(exists) => {
+        cb(null,exists);
+    });
 }
 
 function genZoom(layer,bbox,z,cb) {
