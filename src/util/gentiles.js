@@ -8,6 +8,10 @@ var async = require('async'),
 
 const tileDir = `${__dirname}/../data/tiles`;
 
+const merc = new SphericalMercator({
+    size: 256
+});
+
 function tilePath(tile) {
     return `${tile.layer}/${tile.z}/${tile.x}/${tile.y}.mvt`;
 }
@@ -73,10 +77,6 @@ function genTiles(tiles,cb) {
 }
 
 function genGrid(layer,bbox,z) {
-    const merc = new SphericalMercator({
-        size: 256
-    });
-
     let grid = [];
 
     const xy = merc.xyz(bbox, z);
