@@ -102,7 +102,7 @@ function checkGrid(tile,cb) {
 
 function genZoom(layer,bbox,z,cb) {
     const minGridZ = 9;
-    let largerGridZ = z-5;
+    let largerGridZ = z-2;
 
     if (largerGridZ < minGridZ) {
         largerGridZ = minGridZ;
