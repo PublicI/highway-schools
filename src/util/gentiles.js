@@ -114,7 +114,7 @@ function genZoom(layer,bbox,z,cb) {
                 async.filterSeries(grid,checkGrid,cb);
             },(grid,cb) => {
                 async.mapSeries(grid,(tile,cb) => {
-                    genTiles(genGrid(filteredGrid,merc.bbox(tile.x,tile.y,tile.z),z),cb);
+                    genTiles(genGrid(layer,merc.bbox(tile.x,tile.y,tile.z),z),cb);
                 },cb);
             }],cb);
 }
