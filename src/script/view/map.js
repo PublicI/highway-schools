@@ -1,4 +1,7 @@
-var template = require('../../view/map.html');
+var template = require('../../view/map.html'),
+    leaflet = require('leaflet');
+
+window.L = leaflet;
 
 require('leaflet.vectorgrid');
 

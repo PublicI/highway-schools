@@ -1,50 +1,51 @@
+//jshint esnext:true
+
 var async = require('async'),
     SphericalMercator = require('@mapbox/sphericalmercator'),
     mkdirp = require('mkdirp'),
     fs = require('fs'),
     server = require('../routes/roads');
 
-var tileDir = __dirname + '/../data/tiles';
+const tileDir = `${__dirname}/../data/tiles`;
 
 function tilePath(tile) {
-    return tile.layer + '/' + tile.z + '/' + tile.x + '/' + tile.y + '.mvt';
+    return `${tile.layer}/${tile.z}/${tile.x}/${tile.y}.mvt`;
 }
 
 function readTile(tileDir,tile,cb) {
-    var path = tileDir + '/' + tilePath(tile);
+    const path = `${tileDir}/${tilePath(tile)}`;
 
     fs.readFile(path,'utf8',cb);
 }
 
 function writeTile(json, tile, cb){
-    var path = tileDir + '/' + tilePath(tile);
+    const path = `${tileDir}/${tilePath(tile)}`;
 
-    mkdirp(path.split('/').slice(0,-1).join('/'),function () {
+    mkdirp(path.split('/').slice(0,-1).join('/'),() => {
         fs.writeFile(path,json,cb);
     });
-    
 }
 
 function getTile(tile, cb) {
-    // fs.exists(tileDir + '/' + tilePath(tile),function (exists) {
+    fs.exists(tileDir + '/' + tilePath(tile),function (exists) {
 
-        // if (!exists) {
-            // console.log('making ' + tilePath(tile));
+        if (!exists) {
+            console.log('making ' + tilePath(tile));
 
             server.handle({
                 method: 'get',
-                url: '/tiles/' + tilePath(tile)
+                url: `/tiles/${tilePath(tile)}`
             },{
                 finish: null,
-                on: function (type,fn) {
+                on(type, fn) {
                     if (type == 'finish') {
                         this.finish = fn;
                     }
                 },
-                setHeader: function () {
+                setHeader() {
 
                 },
-                end: function (buffer,encoding) {
+                end(buffer, encoding) {
                     if (buffer.byteLength > 0) {
                         writeTile(buffer,tile,cb);
                     }
@@ -54,11 +55,10 @@ function getTile(tile, cb) {
 
                     this.finish();
                 }
-            },function (err) {
+            },err => {
                 if (err) throw err;
                 cb(null);
             });
-/*
         }
         else {
             console.log('skipping ' + tilePath(tile));
@@ -66,65 +66,69 @@ function getTile(tile, cb) {
             cb(null);
         }
     });
-*/
 }
 
-function genColumn(tile,cb) {
-    var q = async.queue(getTile,3);
-
-    for (var curY = (tile.minY-1); curY <= tile.maxY; curY++) {
-        q.push({
-            layer: tile.layer,
-            z: tile.z,
-            x: tile.x,
-            y: curY
-        });
-    }
-
-    q.drain = cb.bind(null,null);
+function genTiles(tiles,cb) {
+    async.mapSeries(tiles,getTile,cb);
 }
 
-function init(layer,bbox,z,cb) {
-
-    layer = layer || 'blocks';
-    bbox = bbox || [-170.1562,18.1459,-64.5117,72.1818];
-    z = z || [11,11];
-
-    var merc = new SphericalMercator({
+function genGrid(layer,bbox,z) {
+    const merc = new SphericalMercator({
         size: 256
     });
 
-    var q = async.queue(genColumn,1);
+    let grid = [];
 
-    for (var curZ = z[0]; curZ <= z[1]; curZ++) {
-        var xy = merc.xyz(bbox, curZ);
-        for (var curX = (xy.minX-1); curX <= xy.maxX; curX++) {
-            // for (var curY = (xy.minY-1); curY <= xy.maxY; curY++) {
-                q.push({
-                    layer: layer,
-                    z: curZ,
-                    x: curX,
-                    y: null, //curY
-                    minY: xy.minY,
-                    maxY: xy.maxY
-                });
-            // }
+    const xy = merc.xyz(bbox, z);
+    for (let curX = (xy.minX-1); curX <= (xy.maxX+1); curX++) {
+        for (let curY = (xy.minY-1); curY <= (xy.maxY+1); curY++) {
+            grid.push({
+                layer: layer,
+                x: curX,
+                y: curY,
+                z: z
+            });
         }
     }
 
-    q.drain = function (err) {
-        if (typeof cb !== 'undefined' && cb) {
-            if (err) {
-                cb(err);
-                return;
-            }
+    return grid;
+}
 
-            cb(null);
+function checkGrid(tile,cb) {
+    fs.exists(`${tileDir}/${tilePath(tile)}`,cb);
+}
+
+function genZoom(layer,bbox,z,cb) {
+    const minGridZ = 9;
+    let largerGridZ = z-5;
+
+    if (largerGridZ < minGridZ) {
+        largerGridZ = minGridZ;
+    }
+
+    async.waterfall([(cb) => {
+                cb(null,genGrid(layer,bbox,largerGridZ));
+            },(grid,cb) => {
+                async.filterSeries(grid,checkGrid,cb);
+            },(grid,cb) => {
+                async.mapSeries(grid,(tile,cb) => {
+                    genTiles(genGrid(filteredGrid,merc.bbox(tile.x,tile.y,tile.z),z),cb);
+                },cb);
+            }],cb);
+}
+
+function init(layer='blocks', bbox=[-170.1562,18.1459,-64.5117,72.1818], z=[11,11], cb=null) {
+    var zs = [];
+
+    for (let curZ = z[0]; curZ <= z[1]; curZ++) {
+        zs.push(curZ);
+    }
+
+    async.mapSeries(zs,genZoom.bind(null,layer,bbox),function () {
+        if (cb) {
+            cb();
         }
-        else {
-            console.log('done');
-        }
-    };
+    });
 }
 
 if (require.main === module) {

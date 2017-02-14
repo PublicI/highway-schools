@@ -2,8 +2,8 @@ var gentiles = require('./gentiles.js'),
     async = require('async');
 
 var config = {
-    minZoom: 14,
-    maxZoom: 14,
+    minZoom: 9,
+    maxZoom: 16,
     parts: [{
         name: 'Lower 48',
         bbox: [
@@ -29,7 +29,8 @@ function makePart(part, cb) {
     console.log('');
     console.log('=== ' + part.name + ' ===');
 
-    gentiles.makeTiles('roads', [part.bbox[0][1], part.bbox[0][0], part.bbox[1][1], part.bbox[1][0]], [config.minZoom, config.maxZoom], cb);
+    gentiles.makeTiles('roads', [part.bbox[0][1], part.bbox[0][0],
+                                 part.bbox[1][1], part.bbox[1][0]], [config.minZoom, config.maxZoom], cb);
 }
 
 async.mapSeries(config.parts,makePart,function () {
