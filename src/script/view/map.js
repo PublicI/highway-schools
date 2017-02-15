@@ -91,7 +91,7 @@ module.exports = {
         vm.map.on('click', vm.stopAnim);
 
         vm.map.on('load',function () {
-            var controls = document.querySelectorAll('.leaflet-control a,.leaflet-control input');
+            var controls = document.querySelectorAll('.leaflet-control a');
 
             for (var i = 0; i < controls.length; i++) {
                 controls[i].addEventListener('click',vm.stopAnim);
@@ -115,9 +115,9 @@ module.exports = {
             'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             // attribution: '&copy; '+mapLink+', '+wholink,
             minZoom: 12, // 11
-            maxZoom: 16,
-            opacity: 0.95 // 0.85,
-            // detectRetina: true
+            // maxZoom: 16,
+            opacity: 0.95, // 0.85,
+            detectRetina: true
         }).addTo(vm.map);
 
         var roadLayer = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
@@ -167,7 +167,8 @@ module.exports = {
         L.tileLayer('http://tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
             maxZoom: 15,
             updateWhenZooming: false,
-            opacity: 1
+            opacity: 1,
+            detectRetina: true
         }).addTo(vm.map);
 
         var GoogleSearch = L.Control.extend({
@@ -183,7 +184,11 @@ module.exports = {
 
         var gs = (new GoogleSearch()).addTo(vm.map);
 
-        var input = document.getElementById("searchBox");
+        var input = document.getElementById('searchBox');
+
+        input.addEventListener('focus',vm.stopAnim);
+
+        L.DomEvent.disableClickPropagation(input);
 
         var searchBox = new google.maps.places.SearchBox(input);
 
