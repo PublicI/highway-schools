@@ -105,7 +105,7 @@ module.exports = {
         var wholink = 
             'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';*/
         L.tileLayer(
-            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             // attribution: '&copy; '+mapLink+', '+wholink,
             minZoom: 9,
             maxZoom: 10,
@@ -113,14 +113,14 @@ module.exports = {
         }).addTo(vm.map);
 
         L.tileLayer(
-            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             // attribution: '&copy; '+mapLink+', '+wholink,
             minZoom: 11,
             maxZoom: 16,
             opacity: 0.85
         }).addTo(vm.map);
 
-        var roadLayer = L.vectorGrid.protobuf('http://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
+        var roadLayer = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
             opacity: 1,
             minZoom: 9,
             maxZoom: 10,
@@ -141,7 +141,7 @@ module.exports = {
             }
         }).addTo(vm.map);
 
-        var roadLayer2 = L.vectorGrid.protobuf('http://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
+        var roadLayer2 = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
             opacity: 0.4,
             minZoom: 11,
             maxZoom: 16,
@@ -162,9 +162,9 @@ module.exports = {
             }
         }).addTo(vm.map);
 
-        L.tileLayer('http://tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
+        L.tileLayer('https://tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
             maxZoom: 15,
-            opacity: 0.8
+            opacity: 1
         }).addTo(vm.map);
 
         var GoogleSearch = L.Control.extend({
