@@ -77,7 +77,7 @@ app.use('/',webpackMiddleware(embedCompiler, {
 
 // script.js webpack middlware
 var compiler = webpack({
-    entry: __dirname + '/script/script.js',
+    entry: ['whatwg-fetch',__dirname + '/script/script.js'],
     output: {
         path: __dirname + '/../script',
         filename: 'script.js',

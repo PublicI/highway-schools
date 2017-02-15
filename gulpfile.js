@@ -67,6 +67,7 @@ gulp.task('embedScripts', function() {
 gulp.task('scripts', function() {
     return gulp.src('./src/script/script.js')
         .pipe(webpackStream({
+            entry: ['whatwg-fetch','./src/script/script.js'],
             output: {
                 filename: 'script.js',
                 publicPath: pkg.version + '/'

@@ -65,7 +65,8 @@
     "vue-template-compiler-loader": "^1.0.3",
     "vuex": "^1.0.0",
     "webpack": "^1.13.2",
-    "webpack-dev-middleware": "^1.6.1"
+    "webpack-dev-middleware": "^1.6.1",
+    "whatwg-fetch": "^2.0.2"
   },
   "scripts": {
     "start": "supervisor -i node_modules,src/script -e js,sql node src/app.js"

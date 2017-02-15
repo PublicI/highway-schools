@@ -1,4 +1,4 @@
-var Vue = require('vue/dist/vue.js'),
+var Vue = require('vue'),
     Vuex = require('vuex'),
     App = require('./view/app'),
     VueRouter = require('vue-router');

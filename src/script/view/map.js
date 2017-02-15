@@ -114,9 +114,10 @@ module.exports = {
         L.tileLayer(
             'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             // attribution: '&copy; '+mapLink+', '+wholink,
-            minZoom: 9, // 11
-            maxZoom: 16,
-            opacity: 1 // 0.85
+            // minZoom: 9, // 11
+            // maxZoom: 16,
+            opacity: 1, // 0.85,
+            detectRetina: true
         }).addTo(vm.map);
 
         var roadLayer = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
