@@ -1,15 +1,15 @@
-var request = require('d3-request');
+// var request = require('d3-request');
+
+var Tabletop = require('tabletop');
 
 module.exports = {
     retrieve: function(store) {
-        var url = 'schools.json';
+        var url = 'https://docs.google.com/spreadsheets/d/1AZ_oRij3iNEr0xRlfYFTn4bWu3MHtxfWxF3QGysifPs/pubhtml';
 
-        request.json(url,function (err,data) {
-            store.dispatch('setSchools', data.schools.map(function (nominee,i) {
-            	nominee.index = i;
-
-            	return nominee;
-            }));
-        });
+        Tabletop.init( { key: url,
+                         callback: function (data) {
+                            store.dispatch('setSchools', data);
+                         },
+                         simpleSheet: true } );
     }
 };

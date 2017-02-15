@@ -121,6 +121,44 @@ body {
     }
 }
 
+.leaflet-fade-anim .leaflet-tile {
+    opacity: 1;
+}
+
+.leaflet-container {
+    .leaflet-tooltip.schoolLabel, .leaflet-tooltip.cityLabel {
+        opacity: 1 !important;
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        color: black;
+        font-size: 15px;
+        line-height: 120%;
+        font-weight: bold;
+        white-space: normal;
+        width: 250px;
+        text-align: center;
+        text-shadow:
+         -1px -1px 0 white,
+          1px -1px 0 white,
+          -1px 1px 0 white,
+           1px 1px 0 white;
+        -webkit-transition: opacity 1s; /* Safari */
+        transition: opacity 1s;
+    }
+
+    .leaflet-tooltip.cityLabel {
+        font-weight: normal;
+        font-size: 14px;
+    }
+}
+
+.leaflet-container.hideLabels {
+    .leaflet-tooltip.schoolLabel, .leaflet-tooltip.cityLabel {
+        opacity: 0 !important;
+    }
+}
+
 @media (max-width: 1000px) {
     .highwaySchools {
 

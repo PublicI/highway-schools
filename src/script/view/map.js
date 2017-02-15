@@ -9,28 +9,96 @@ module.exports = {
     data: function () {
         return {
             map: null,
-            schoolIndex: 0
+            schoolIndex: 0,
+            anim: true
         };
     },
     vuex: require('../model/schools'),
     render: template.render,
     staticRenderFns: template.staticRenderFns,
     methods: {
-        nextSchool: function () {
-            this.schoolIndex++;
+        showSchool: function () {
+            if (this.schools.length === 0 ||
+                this.schoolIndex >= this.schools.length ||
+                !this.schools[this.schoolIndex].name ||
+                this.schools[this.schoolIndex].name === '') {
+                return;
+            }
 
-            this.map.setView([this.schools[this.schoolIndex].latcode, this.schools[this.schoolIndex].longcode], 16);
+            var school = this.schools[this.schoolIndex];
+
+            var coords = [school.latcode, school.longcode];
+
+            L.circle(coords, {
+                radius: 152.4,
+                color: 'black',
+                fill: false
+            }).addTo(this.map);
+
+            this.map.setView(coords, 16);
+
+            var schoolLabel = new L.marker(coords, {
+                opacity: 0
+            });
+            schoolLabel.bindTooltip(school.name, {
+                permanent: true,
+                className: 'schoolLabel',
+                offset: [0, -120],
+                direction: 'center'
+            });
+            schoolLabel.addTo(this.map);
+
+            var cityLabel = new L.marker(coords, {
+                opacity: 0
+            });
+            cityLabel.bindTooltip(school.city + ', ' + school.state, {
+                permanent: true,
+                className: 'cityLabel',
+                offset: [0, -150],
+                direction: 'center'
+            });
+            cityLabel.addTo(this.map);
+        },
+        nextSchool: function () {
+            if (this.anim) {
+                this.schoolIndex++;
+
+                this.showSchool();
+            }
+        },
+        stopAnim: function () {
+            this.anim = false;
         }
     },
     mounted: function () {
         var vm = this;
 
-        this.map = L.map(vm.$el,{
+        vm.map = L.map(vm.$el,{
             minZoom: 9,
             maxZoom: 16,
             attributionControl: false
-        }) //.setView([38.901947, -77.039047],16);
-                    .setView([vm.schools[vm.schoolIndex].latcode, vm.schools[vm.schoolIndex].longcode], 16);
+        });
+
+        vm.map.on('zoomend',function () {
+            var zoom = vm.map.getZoom();
+
+            if (zoom < 16) {
+                vm.$el.classList.add('hideLabels');
+            }
+            else {
+                vm.$el.classList.remove('hideLabels');
+            }
+        });
+
+        vm.map.on('click', vm.stopAnim);
+
+        vm.map.on('load',function () {
+            var controls = document.querySelectorAll('.leaflet-control a,.leaflet-control input');
+
+            for (var i = 0; i < controls.length; i++) {
+                controls[i].addEventListener('click',vm.stopAnim);
+            }
+        });
 /*
         var mapLink = 
             '<a href="http://www.esri.com/">Esri</a>';
@@ -40,14 +108,14 @@ module.exports = {
             'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             // attribution: '&copy; '+mapLink+', '+wholink,
             minZoom: 9,
-            maxZoom: 13,
+            maxZoom: 10,
             opacity: 0.85
         }).addTo(vm.map);
 
         L.tileLayer(
             'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             // attribution: '&copy; '+mapLink+', '+wholink,
-            minZoom: 12,
+            minZoom: 11,
             maxZoom: 16,
             opacity: 0.85
         }).addTo(vm.map);
@@ -55,7 +123,7 @@ module.exports = {
         var roadLayer = L.vectorGrid.protobuf('http://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
             opacity: 1,
             minZoom: 9,
-            maxZoom: 13,
+            maxZoom: 10,
             vectorTileLayerStyles: {
                 hightraffic: {
                     fillColor: 'red',
@@ -73,9 +141,9 @@ module.exports = {
             }
         }).addTo(vm.map);
 
-        var roadLayer2 = L.vectorGrid.protobuf('tiles/roads/{z}/{x}/{y}.mvt', {
+        var roadLayer2 = L.vectorGrid.protobuf('http://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
             opacity: 0.4,
-            minZoom: 12,
+            minZoom: 11,
             maxZoom: 16,
             vectorTileLayerStyles: {
                 hightraffic: {
@@ -95,11 +163,9 @@ module.exports = {
         }).addTo(vm.map);
 
         L.tileLayer('http://tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
-            maxZoom: 18,
+            maxZoom: 15,
             opacity: 0.8
         }).addTo(vm.map);
-
-        // setInterval(vm.nextSchool,5000);
 
         var GoogleSearch = L.Control.extend({
           onAdd: function() {
@@ -141,6 +207,10 @@ module.exports = {
           vm.map.fitBounds(group.getBounds());
 
         });
+
+        vm.showSchool();
+
+        setInterval(vm.nextSchool,5000);
 
     }
 };

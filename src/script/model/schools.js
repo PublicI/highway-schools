@@ -1,12 +1,18 @@
 module.exports = {
     state: {
-        // list: []
-        list: require('dsv!../../data/hightrafficschools2.csv').sort(function (a,b) {
-            return b.aadt-a.aadt;
-        })
+        list: [{
+            ncessch: '240048000877',
+            latcode: 39.0183036,
+            longcode: -77.0116627,
+            name: 'Montgomery Blair High School',
+            city: 'Silver Spring',
+            state: 'MD'
+        }]
     },
     mutations: {
-        // TK
+        setSchools: function (state,schools) {
+            state.list = schools;
+        }
     },
     getters: {
         schools: function (state) {
