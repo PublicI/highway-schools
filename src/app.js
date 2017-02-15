@@ -77,14 +77,15 @@ app.use('/',webpackMiddleware(embedCompiler, {
 
 // script.js webpack middlware
 var compiler = webpack({
-    entry: ['whatwg-fetch',__dirname + '/script/script.js'],
+    entry: ['es6-promise/auto','whatwg-fetch',__dirname + '/script/script.js'],
     output: {
         path: __dirname + '/../script',
         filename: 'script.js',
         publicPath: '/' + pkg.version + '/'
     },
     plugins: [new webpack.DefinePlugin({
-        'PKG_VERSION': '\'' + pkg.version + '\''
+        'PKG_VERSION': '\'' + pkg.version + '\'',
+        'ArrayBuffer.isView': 'function (t) { return ArrayBuffer.isView && ArrayBuffer.isView(t) }'
     })],
     devtool: 'source-map',
     module: {

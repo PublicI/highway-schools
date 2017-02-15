@@ -67,7 +67,7 @@ gulp.task('embedScripts', function() {
 gulp.task('scripts', function() {
     return gulp.src('./src/script/script.js')
         .pipe(webpackStream({
-            entry: ['whatwg-fetch','./src/script/script.js'],
+            entry: ['es6-promise/auto','whatwg-fetch','./src/script/script.js'],
             output: {
                 filename: 'script.js',
                 publicPath: pkg.version + '/'
@@ -77,7 +77,8 @@ gulp.task('scripts', function() {
                     'PKG_VERSION': '\'' + pkg.version + '\'',
                     'process.env': {
                         NODE_ENV: '"production"'
-                    }
+                    },
+                    'ArrayBuffer.isView': 'function (t) { return ArrayBuffer.isView && ArrayBuffer.isView(t) }'
                 }),
                 new webpack.optimize.DedupePlugin(),
                 new webpack.optimize.OccurenceOrderPlugin(true),

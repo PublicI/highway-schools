@@ -89,6 +89,7 @@ module.exports = {
         });
 
         vm.map.on('click', vm.stopAnim);
+        vm.map.on('dragstart', vm.stopAnim);
 
         vm.map.on('load',function () {
             var controls = document.querySelectorAll('.leaflet-control a');
