@@ -1,8 +1,7 @@
 var Vue = require('vue/dist/vue.js'),
     Vuex = require('vuex'),
     App = require('./view/app'),
-    VueRouter = require('vue-router'),
-    util = require('./lib/util');
+    VueRouter = require('vue-router');
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
