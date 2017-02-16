@@ -167,7 +167,7 @@ module.exports = {
                 detectRetina: true
             }).addTo(vm.map);
 
-            var roadLayer = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
+            var roadLayer = L.vectorGrid.protobuf('tiles/roads/{z}/{x}/{y}.mvt', {
                 opacity: 1,
                 minZoom: 9,
                 maxZoom: 10,
@@ -189,7 +189,7 @@ module.exports = {
                 }
             }).addTo(vm.map);
 
-            var roadLayer2 = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
+            var roadLayer2 = L.vectorGrid.protobuf('tiles/roads/{z}/{x}/{y}.mvt', {
                 opacity: 0.4,
                 minZoom: 11,
                 maxZoom: 16,
