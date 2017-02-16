@@ -1,6 +1,6 @@
 {
   "name": "highway-schools",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-awspublish": "^3.3.0",
