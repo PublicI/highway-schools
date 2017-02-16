@@ -75,7 +75,7 @@ gulp.task('scripts', function() {
                 new webpack.DefinePlugin({
                     'PKG_VERSION': '\'' + pkg.version + '\'',
                     'process.env': {
-                        NODE_ENV: '"production"'
+                        production: '"production"'
                     },
                     'ArrayBuffer.isView': 'function (t) { return ArrayBuffer.isView && ArrayBuffer.isView(t) }'
                 }),
