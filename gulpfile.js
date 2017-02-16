@@ -21,13 +21,14 @@ gulp.task('style', function() {
         .pipe(less({
             paths: ['.', 'lib']
         }))
+        /*
         .pipe(csslint({
             'box-model': false,
             'adjoining-classes': false,
             'import': false,
             'known-properties': false
         }))
-        .pipe(csslint.formatter())
+        .pipe(csslint.formatter())*/
         .pipe(cleanCSS({compatibility: 'ie8'}))
         .pipe(gulp.dest('dist/' + pkg.version));
 });
