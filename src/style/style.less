@@ -1,6 +1,8 @@
 // @import 'https://fonts.googleapis.com/css?family=Roboto+Mono:400';
 
-@import url("site.css");
+@import (inline) "site.css";
+@import (inline) "../../node_modules/leaflet/dist/leaflet.css";
+@import (inline) "../../node_modules/mapbox-gl/dist/mapbox-gl.css";
 
 .preview {
     max-width: 1260px;
@@ -27,7 +29,7 @@ body {
         font-size: 80%;
         line-height: 120%;
         color: #666;
-        padding-top: 30px;
+        padding-top: 20px;
         margin:0;
     }
 
@@ -128,8 +130,8 @@ body {
     opacity: 1;
 }*/
 
-.leaflet-container {
-    .leaflet-tooltip.schoolLabel, .leaflet-tooltip.cityLabel {
+.leaflet-container, .map {
+    .leaflet-tooltip.schoolLabel, .schoolLabel, .leaflet-tooltip.cityLabel, .cityLabel {
         opacity: 1 !important;
         background-color: transparent;
         border: none;
@@ -150,7 +152,7 @@ body {
         transition: opacity 1s;
     }
 
-    .leaflet-tooltip.cityLabel {
+    .leaflet-tooltip.cityLabel, .cityLabel {
         font-weight: normal;
         font-size: 14px;
     }

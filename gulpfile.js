@@ -52,8 +52,6 @@ gulp.task('embedScripts', function() {
                     'PKG_VERSION': '\'' + pkg.version + '\'',
                     'PKG_NAME': '\'' + pkg.name + '\''
                 }),
-                new webpack.optimize.DedupePlugin(),
-                new webpack.optimize.OccurenceOrderPlugin(true),
                 new webpack.optimize.UglifyJsPlugin({
                     compress: {
                         warnings: false
@@ -80,22 +78,25 @@ gulp.task('scripts', function() {
                     },
                     'ArrayBuffer.isView': 'function (t) { return ArrayBuffer.isView && ArrayBuffer.isView(t) }'
                 }),
-                new webpack.optimize.DedupePlugin(),
-                new webpack.optimize.OccurenceOrderPlugin(true),
                 new webpack.optimize.UglifyJsPlugin({
                     compress: {
                         warnings: false
                     }
                 })
             ],
+            resolveLoader: {
+                moduleExtensions: ['-loader']
+            },
             module: {
                 loaders: [{
-                    test: /\.json$/,
-                    loader: 'json'
-                }, {
                     test: /\.html$/,
                     loader: 'vue-template-compiler'
                 }]
+                /*
+                {
+                    test: /\.json$/,
+                    loader: 'json'
+                },*/
             }
         }))
         .pipe(gulp.dest('dist/' + pkg.version));

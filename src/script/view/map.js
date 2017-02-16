@@ -1,9 +1,4 @@
 var template = require('../../view/map.html');
-//    leaflet = require('leaflet');
-
-var mapboxgl = require('mapbox-gl/dist/mapbox-gl');
-
-// require('leaflet.vectorgrid');
 
 module.exports = {
     data: function () {
@@ -29,20 +24,7 @@ module.exports = {
 
             var school = this.schools[this.schoolIndex];
 
-            var coords = [parseFloat(school.longcode),parseFloat(school.latcode)];
-
-            this.map.easeTo({
-                center: coords,
-                zoom: 15
-            });
-
-            this.map.once('moveend', function() {
-                vm.map.zoomTo(15.2,{
-                    duration: 4500
-                });
-            });
-
-            return;
+            var coords = [parseFloat(school.latcode),parseFloat(school.longcode)];
 
             L.circle(coords, {
                 radius: 152.4,
@@ -83,233 +65,180 @@ module.exports = {
         },
         stopAnim: function () {
             this.anim = false;
+        },
+        initPlaces: function () {
+            var vm = this;
+
+            var GoogleSearch = L.Control.extend({
+              onAdd: function() {
+                var element = document.createElement("input");
+
+                element.id = "searchBox";
+                element.placeholder = 'Search for a place';
+
+                return element;
+              }
+            });
+
+            var gs = (new GoogleSearch()).addTo(vm.map);
+
+            var input = document.getElementById('searchBox');
+
+            input.addEventListener('focus',vm.stopAnim);
+
+            L.DomEvent.disableClickPropagation(input);
+
+            var searchBox = new google.maps.places.SearchBox(input);
+
+            searchBox.addListener('places_changed', function() {
+              var places = searchBox.getPlaces();
+
+              if (places.length === 0) {
+                return;
+              }
+
+              var group = L.featureGroup();
+
+              places.forEach(function(place) {
+
+                // Create a marker for each place.
+                var marker = L.marker([
+                  place.geometry.location.lat(),
+                  place.geometry.location.lng()
+                ]);
+                group.addLayer(marker);
+              });
+
+              group.addTo(vm.map);
+              vm.map.fitBounds(group.getBounds());
+
+            });
+        },
+        init: function () {
+            var vm = this;
+
+            vm.map = L.map(vm.$el,{
+                minZoom: 9,
+                maxZoom: 16,
+                attributionControl: false
+            });
+
+            vm.map.on('zoomend',function () {
+                var zoom = vm.map.getZoom();
+
+                if (zoom < 16) {
+                    vm.$el.classList.add('hideLabels');
+                }
+                else {
+                    vm.$el.classList.remove('hideLabels');
+                }
+            });
+
+            vm.map.on('click', vm.stopAnim);
+            vm.map.on('dragstart', vm.stopAnim);
+
+            vm.map.on('load',function () {
+                var controls = document.querySelectorAll('.leaflet-control a');
+
+                for (var i = 0; i < controls.length; i++) {
+                    controls[i].addEventListener('click',vm.stopAnim);
+                }
+            });
+    /*
+            var mapLink = 
+                '<a href="http://www.esri.com/">Esri</a>';
+            var wholink = 
+                'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';*/
+
+            L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                // attribution: '&copy; '+mapLink+', '+wholink,
+                minZoom: 9,
+                maxZoom: 11,
+                opacity: 0.85,
+            }).addTo(vm.map);
+
+            L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                // attribution: '&copy; '+mapLink+', '+wholink,
+                minZoom: 12, // 11
+                // maxZoom: 16,
+                opacity: 0.95, // 0.85,
+                detectRetina: true
+            }).addTo(vm.map);
+
+            var roadLayer = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
+                opacity: 1,
+                minZoom: 9,
+                maxZoom: 10,
+                updateWhenZooming: false,
+                vectorTileLayerStyles: {
+                    hightraffic: {
+                        fillColor: 'red',
+                        weight: 0,
+                        fillOpacity: 1,
+                        fill: true
+                    },
+                    truckroute: {
+                        fillColor: 'orange',
+                        weight: 0,
+                        color: 'rgb(200,200,200)',
+                        fillOpacity: 1,
+                        fill: true
+                    }
+                }
+            }).addTo(vm.map);
+
+            var roadLayer2 = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
+                opacity: 0.4,
+                minZoom: 11,
+                maxZoom: 16,
+                updateWhenZooming: false,
+                vectorTileLayerStyles: {
+                    hightraffic: {
+                        fillColor: 'red',
+                        weight: 0,
+                        fillOpacity: 1,
+                        fill: true
+                    },
+                    truckroute: {
+                        fillColor: 'orange',
+                        weight: 0,
+                        color: 'rgb(200,200,200)',
+                        fillOpacity: 1,
+                        fill: true
+                    }
+                }
+            }).addTo(vm.map);
+
+            L.tileLayer('http://tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
+                maxZoom: 15,
+                updateWhenZooming: false,
+                opacity: 1,
+                detectRetina: true
+            }).addTo(vm.map);
+
+            vm.showSchool();
+
+            setInterval(vm.nextSchool,5000);
+
+            if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+                vm.initPlaces();
+            }
+            else {
+                window.initPlaces = vm.initPlaces;
+            }
         }
     },
     mounted: function () {
         var vm = this;
 
-        // mapboxgl.accessToken = 'pk.eyJ1IjoiY2hyaXN6cyIsImEiOiJkRjh1YWJrIn0.44oxqNNdcnw7SQw3aGJU-A';
+        require.ensure([], function(require) {
+            require('leaflet');
 
-        var style = {
-            "version": 8,
-            "sources": {
-                "satellite": {
-                    "type": "raster",
-                    "tiles": ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
-                    "tileSize": 256
-                },
-                "roads": {
-                    "type": "vector",
-                    "tiles": ["https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt"]
-                }
-            },
-            "layers": [
-                {
-                    "id": "background",
-                    "type": "background",
-                    "paint": {
-                        "background-color": "white"
-                    }
-                }, {
-                    "id": "satellite",
-                    "type": "raster",
-                    "source": "satellite",
-                    "minzoom": 0,
-                    "maxzoom": 22
-                }, {
-                    "id": "hightraffic",
-                    "type": "fill",
-                    "source": "roads",
-                    "source-layer": "hightraffic",
-                    "minzoom": 9,
-                    // "maxzoom": 16,
-                    // "filter": ["==", "$type", "Polygon"],
-                    "paint": {
-                        "fill-color": "red",
-                        "fill-opacity": 0.4
-                    }
-                }, {
-                    "id": "truckroute",
-                    "type": "fill",
-                    "source": "roads",
-                    "source-layer": "truckroute",
-                    "minzoom": 9,
-                    // "maxzoom": 16,
-                    // "filter": ["==", "$type", "Polygon"],
-                    "paint": {
-                        "fill-color": "orange",
-                        "fill-opacity": 0.4
-                    }
-                }
-            ]
-        };
+            require('leaflet.vectorgrid');
 
-        var school = this.schools[this.schoolIndex];
-
-        vm.map = new mapboxgl.Map({
-            container: vm.$el,
-            style: style,
-            zoom: 15.5,
-            center: [school.longcode, school.latcode],
-            minZoom: 9,
-            maxZoom: 16
-        });
-
-        vm.map.addControl(new mapboxgl.NavigationControl()); // , 'top-left'
-
-        setInterval(vm.nextSchool,5000);
-
-        return;
-
-        vm.map = L.map(vm.$el,{
-            minZoom: 9,
-            maxZoom: 16,
-            attributionControl: false
-        });
-
-        vm.map.on('zoomend',function () {
-            var zoom = vm.map.getZoom();
-
-            if (zoom < 16) {
-                vm.$el.classList.add('hideLabels');
-            }
-            else {
-                vm.$el.classList.remove('hideLabels');
-            }
-        });
-
-        vm.map.on('click', vm.stopAnim);
-        vm.map.on('dragstart', vm.stopAnim);
-
-        vm.map.on('load',function () {
-            var controls = document.querySelectorAll('.leaflet-control a');
-
-            for (var i = 0; i < controls.length; i++) {
-                controls[i].addEventListener('click',vm.stopAnim);
-            }
-        });
-/*
-        var mapLink = 
-            '<a href="http://www.esri.com/">Esri</a>';
-        var wholink = 
-            'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';*/
-
-        L.tileLayer(
-            'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            // attribution: '&copy; '+mapLink+', '+wholink,
-            minZoom: 9,
-            maxZoom: 11,
-            opacity: 0.85,
-        }).addTo(vm.map);
-
-        L.tileLayer(
-            'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            // attribution: '&copy; '+mapLink+', '+wholink,
-            minZoom: 12, // 11
-            // maxZoom: 16,
-            opacity: 0.95, // 0.85,
-            detectRetina: true
-        }).addTo(vm.map);
-
-        var roadLayer = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
-            opacity: 1,
-            minZoom: 9,
-            maxZoom: 10,
-            updateWhenZooming: false,
-            vectorTileLayerStyles: {
-                hightraffic: {
-                    fillColor: 'red',
-                    weight: 0,
-                    fillOpacity: 1,
-                    fill: true
-                },
-                truckroute: {
-                    fillColor: 'orange',
-                    weight: 0,
-                    color: 'rgb(200,200,200)',
-                    fillOpacity: 1,
-                    fill: true
-                }
-            }
-        }).addTo(vm.map);
-
-        var roadLayer2 = L.vectorGrid.protobuf('https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt', {
-            opacity: 0.4,
-            minZoom: 11,
-            maxZoom: 16,
-            updateWhenZooming: false,
-            vectorTileLayerStyles: {
-                hightraffic: {
-                    fillColor: 'red',
-                    weight: 0,
-                    fillOpacity: 1,
-                    fill: true
-                },
-                truckroute: {
-                    fillColor: 'orange',
-                    weight: 0,
-                    color: 'rgb(200,200,200)',
-                    fillOpacity: 1,
-                    fill: true
-                }
-            }
-        }).addTo(vm.map);
-
-        L.tileLayer('http://tile.stamen.com/toner-labels/{z}/{x}/{y}.png', {
-            maxZoom: 15,
-            updateWhenZooming: false,
-            opacity: 1,
-            detectRetina: true
-        }).addTo(vm.map);
-
-        var GoogleSearch = L.Control.extend({
-          onAdd: function() {
-            var element = document.createElement("input");
-
-            element.id = "searchBox";
-            element.placeholder = 'Search for a place';
-
-            return element;
-          }
-        });
-
-        var gs = (new GoogleSearch()).addTo(vm.map);
-
-        var input = document.getElementById('searchBox');
-
-        input.addEventListener('focus',vm.stopAnim);
-
-        L.DomEvent.disableClickPropagation(input);
-
-        var searchBox = new google.maps.places.SearchBox(input);
-
-        searchBox.addListener('places_changed', function() {
-          var places = searchBox.getPlaces();
-
-          if (places.length === 0) {
-            return;
-          }
-
-          var group = L.featureGroup();
-
-          places.forEach(function(place) {
-
-            // Create a marker for each place.
-            var marker = L.marker([
-              place.geometry.location.lat(),
-              place.geometry.location.lng()
-            ]);
-            group.addLayer(marker);
-          });
-
-          group.addTo(vm.map);
-          vm.map.fitBounds(group.getBounds());
-
-        });
-
-        vm.showSchool();
-
-        setInterval(vm.nextSchool,5000);
-
+            vm.init();
+        }, 'leaflet');
     }
 };

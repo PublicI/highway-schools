@@ -88,16 +88,23 @@ var compiler = webpack({
         'ArrayBuffer.isView': 'function (t) { return ArrayBuffer.isView && ArrayBuffer.isView(t) }'
     })],
     devtool: 'source-map',
+    resolveLoader: {
+        moduleExtensions: ['-loader']
+    },
     module: {
         loaders: [{
-            test: /\.json$/,
-            loader: 'json'
-        },{
             test: /\.html$/,
             loader: 'vue-template-compiler'
         }]
     }
 });
+
+/*
+{
+    test: /\.json$/,
+    loader: 'json'
+},
+*/
 
 app.use('/' + pkg.version,webpackMiddleware(compiler, {
     noInfo: true
