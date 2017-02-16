@@ -96,21 +96,26 @@ body {
     .colorBlock {
         width: 15px;
         height: 15px;
-        display: inline-block;
+        position: absolute;
+        top: 50%;
+        margin-top: -7.5px;
     }
 
     .keyLabel {
         display: inline-block;
         font-size: 15px;
-        line-height: 120%;
+        line-height: 110%;
         width: 95%;
         position: relative;
         top: -2px;
+        left: 20px;
     }
 
     .keyBlock {
         width: 49%;
         float: left;
+        position: relative;
+        margin-bottom: 5px;
     }
 
     .schools:after, .key:after {
@@ -174,6 +179,11 @@ body {
     .highwaySchools {
         .map {
             height: 400px;
+        }
+
+        .keyBlock {
+            float: none;
+            width: 100%;
         }
     }
 }

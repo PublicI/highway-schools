@@ -150,7 +150,7 @@ gulp.task('bakeIndex', function(cb) {
 });
 
 gulp.task('copy', function() {
-    return gulp.src(['src/img/**'], {
+    return gulp.src(['src/images/**'], {
             base: 'src/'
         })
         .pipe(gulp.dest('dist')); // /' + pkg.version
