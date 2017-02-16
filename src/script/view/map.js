@@ -1,5 +1,8 @@
 var template = require('../../view/map.html');
 
+require('leaflet');
+require('leaflet.vectorgrid');
+
 module.exports = {
     data: function () {
         return {
@@ -232,13 +235,9 @@ module.exports = {
     },
     mounted: function () {
         var vm = this;
-
-        require.ensure([], function(require) {
-            require('leaflet');
-
-            require('leaflet.vectorgrid');
-
-            vm.init();
-        }, 'leaflet');
+        
+        // require.ensure([], function(require) {
+        vm.init();
+        // }, 'leaflet');
     }
 };

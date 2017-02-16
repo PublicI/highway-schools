@@ -9,10 +9,10 @@ module.exports = {
             topmatter: false,
             hash: false
         };
-    },*/
+    },
     vuex: {
         actions: require('../controller/load')
-    },
+    },*/
     components: {
         overview: require('./overview')
     },
@@ -34,7 +34,7 @@ module.exports = {
             pym.sendHeight();
         });*/
         
-        this.retrieve();
+        // this.retrieve();
     },
     watch: {
         '$route.path': function () {

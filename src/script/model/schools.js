@@ -1,5 +1,6 @@
 module.exports = {
     state: {
+        /*
         list: [{
             ncessch: '240048000877',
             latcode: 39.0183036,
@@ -7,7 +8,8 @@ module.exports = {
             name: 'Montgomery Blair High School',
             city: 'Silver Spring',
             state: 'MD'
-        }]
+        }]*/
+        list: require('dsv!../../data/featuredschools.csv')
     },
     mutations: {
         setSchools: function (state,schools) {
