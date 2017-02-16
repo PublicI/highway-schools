@@ -16,6 +16,10 @@
             // window.pym.Hash = require('./lib/pym.hash');
         }*/
 
+        window.show_social_links_footer = function() {
+            // no-op
+        };
+
         var el = document.getElementById('highwaySchools');
 
         if (typeof el == 'undefined' || !el) {

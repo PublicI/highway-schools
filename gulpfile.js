@@ -210,4 +210,4 @@ gulp.task('bakeData',function (cb) {
     });
 });*/
 
-gulp.task('build', ['bakeEmbed', 'bakeIndex', 'copy-oembed', 'style', 'jshint', 'scripts', 'embedScripts']);
+gulp.task('build', ['bakeEmbed', 'bakeIndex', 'copy', 'copy-oembed', 'style', 'jshint', 'scripts', 'embedScripts']);
