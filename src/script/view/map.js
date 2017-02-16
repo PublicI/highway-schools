@@ -1,7 +1,9 @@
-var template = require('../../view/map.html'),
-    leaflet = require('leaflet');
+var template = require('../../view/map.html');
+//    leaflet = require('leaflet');
 
-require('leaflet.vectorgrid');
+var mapboxgl = require('mapbox-gl/dist/mapbox-gl');
+
+// require('leaflet.vectorgrid');
 
 module.exports = {
     data: function () {
@@ -16,6 +18,8 @@ module.exports = {
     staticRenderFns: template.staticRenderFns,
     methods: {
         showSchool: function () {
+            var vm = this;
+
             if (this.schools.length === 0 ||
                 this.schoolIndex >= this.schools.length ||
                 !this.schools[this.schoolIndex].name ||
@@ -25,7 +29,20 @@ module.exports = {
 
             var school = this.schools[this.schoolIndex];
 
-            var coords = [school.latcode, school.longcode];
+            var coords = [parseFloat(school.longcode),parseFloat(school.latcode)];
+
+            this.map.easeTo({
+                center: coords,
+                zoom: 15
+            });
+
+            this.map.once('moveend', function() {
+                vm.map.zoomTo(15.2,{
+                    duration: 4500
+                });
+            });
+
+            return;
 
             L.circle(coords, {
                 radius: 152.4,
@@ -70,6 +87,79 @@ module.exports = {
     },
     mounted: function () {
         var vm = this;
+
+        // mapboxgl.accessToken = 'pk.eyJ1IjoiY2hyaXN6cyIsImEiOiJkRjh1YWJrIn0.44oxqNNdcnw7SQw3aGJU-A';
+
+        var style = {
+            "version": 8,
+            "sources": {
+                "satellite": {
+                    "type": "raster",
+                    "tiles": ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+                    "tileSize": 256
+                },
+                "roads": {
+                    "type": "vector",
+                    "tiles": ["https://iw-files.s3.amazonaws.com/apps/2017/01/highway-schools/tiles/roads/{z}/{x}/{y}.mvt"]
+                }
+            },
+            "layers": [
+                {
+                    "id": "background",
+                    "type": "background",
+                    "paint": {
+                        "background-color": "white"
+                    }
+                }, {
+                    "id": "satellite",
+                    "type": "raster",
+                    "source": "satellite",
+                    "minzoom": 0,
+                    "maxzoom": 22
+                }, {
+                    "id": "hightraffic",
+                    "type": "fill",
+                    "source": "roads",
+                    "source-layer": "hightraffic",
+                    "minzoom": 9,
+                    // "maxzoom": 16,
+                    // "filter": ["==", "$type", "Polygon"],
+                    "paint": {
+                        "fill-color": "red",
+                        "fill-opacity": 0.4
+                    }
+                }, {
+                    "id": "truckroute",
+                    "type": "fill",
+                    "source": "roads",
+                    "source-layer": "truckroute",
+                    "minzoom": 9,
+                    // "maxzoom": 16,
+                    // "filter": ["==", "$type", "Polygon"],
+                    "paint": {
+                        "fill-color": "orange",
+                        "fill-opacity": 0.4
+                    }
+                }
+            ]
+        };
+
+        var school = this.schools[this.schoolIndex];
+
+        vm.map = new mapboxgl.Map({
+            container: vm.$el,
+            style: style,
+            zoom: 15.5,
+            center: [school.longcode, school.latcode],
+            minZoom: 9,
+            maxZoom: 16
+        });
+
+        vm.map.addControl(new mapboxgl.NavigationControl()); // , 'top-left'
+
+        setInterval(vm.nextSchool,5000);
+
+        return;
 
         vm.map = L.map(vm.$el,{
             minZoom: 9,
@@ -136,7 +226,7 @@ module.exports = {
                 truckroute: {
                     fillColor: 'orange',
                     weight: 0,
-                    color: 'rgb(200,200,200',
+                    color: 'rgb(200,200,200)',
                     fillOpacity: 1,
                     fill: true
                 }
@@ -158,7 +248,7 @@ module.exports = {
                 truckroute: {
                     fillColor: 'orange',
                     weight: 0,
-                    color: 'rgb(200,200,200',
+                    color: 'rgb(200,200,200)',
                     fillOpacity: 1,
                     fill: true
                 }
