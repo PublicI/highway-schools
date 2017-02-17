@@ -41,66 +41,63 @@ gulp.task('jshint', function() {
         .pipe(jshint.reporter(stylish));
 });
 
-gulp.task('embedScripts', function() {
-    return gulp.src('./src/script/embed.js')
-        .pipe(webpackStream({
-            output: {
-                filename: 'embed.js',
-                publicPath: pkg.version + '/'
-            },
-            plugins: [
-                new webpack.DefinePlugin({
-                    'PKG_VERSION': '\'' + pkg.version + '\'',
-                    'PKG_NAME': '\'' + pkg.name + '\''
-                }),
-                new webpack.optimize.UglifyJsPlugin({
-                    compress: {
-                        warnings: false
-                    }
-                })
-            ]
-        }))
-        .pipe(gulp.dest('dist'));
+gulp.task('embedScripts', function(cb) {
+    webpack({
+        entry: ['./src/script/embed.js'],
+        output: {
+            filename: 'embed.js',
+            publicPath: '/',
+            path: __dirname + '/dist/'
+        },
+        plugins: [
+            new webpack.DefinePlugin({
+                'PKG_VERSION': '\'' + pkg.version + '\'',
+                'PKG_NAME': '\'' + pkg.name + '\''
+            }),
+            new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                    warnings: false
+                }
+            })
+        ]
+    },cb);
 });
 
-gulp.task('scripts', function() {
-    return gulp.src('./src/script/script.js')
-        .pipe(webpackStream({
-            entry: ['es6-promise/auto','whatwg-fetch','./src/script/script.js'],
-            output: {
-                filename: 'script.js',
-                publicPath: pkg.version + '/'
-            },
-            plugins: [
-                new webpack.DefinePlugin({
-                    'PKG_VERSION': '\'' + pkg.version + '\'',
-                    'process.env': {
-                        production: '"production"'
-                    },
-                    'ArrayBuffer.isView': 'function (t) { return ArrayBuffer.isView && ArrayBuffer.isView(t) }'
-                }),
-                new webpack.optimize.UglifyJsPlugin({
-                    compress: {
-                        warnings: false
-                    }
-                })
-            ],
-            resolveLoader: {
-                moduleExtensions: ['-loader']
-            },
-            module: {
-                loaders: [{
-                    test: /\.html$/,
-                    loader: 'vue-template-compiler'
-                }]
-                /*
-                {
-                    test: /\.json$/,
-                    loader: 'json'
-                },*/
-            }
-        }))
-        .pipe(gulp.dest('dist/' + pkg.version));
+gulp.task('scripts', function(cb) {
+    webpack({
+        entry: ['es6-promise/auto','whatwg-fetch','./src/script/script.js'],
+        output: {
+            filename: 'script.js',
+            publicPath: pkg.version + '/',
+            path: __dirname + '/dist/' + pkg.version + '/'
+        },
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env.NODE_ENV': "'production'",
+                'PKG_VERSION': '\'' + pkg.version + '\'',
+                'ArrayBuffer.isView': 'function (t) { return ArrayBuffer.isView && ArrayBuffer.isView(t) }'
+            }),
+            new webpack.optimize.UglifyJsPlugin({
+                compress: {
+                    warnings: false
+                }
+            })
+        ],
+        resolveLoader: {
+            moduleExtensions: ['-loader']
+        },
+        module: {
+            loaders: [{
+                test: /\.html$/,
+                loader: 'vue-template-compiler'
+            }]
+            /*
+            {
+                test: /\.json$/,
+                loader: 'json'
+            },*/
+        }
+    },cb);
 });
 
 gulp.task('bakeEmbed', function(cb) {
