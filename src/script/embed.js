@@ -3,6 +3,7 @@
 
     if (document.location.hostname != 'localhost' &&
         document.location.hostname != '10.0.2.2' &&
+        document.location.hostname != '192.168.1.151' &&
         document.location.hostname != 'argus') {
         prefix = '//cloudfront-files-1.publicintegrity.org/apps/2017/01/highway-schools/';
     }

@@ -123,7 +123,8 @@ module.exports = {
             vm.map = L.map(vm.$el,{
                 minZoom: 9,
                 maxZoom: 16,
-                attributionControl: false
+                attributionControl: false,
+                keyboard: false
             });
 
             vm.map.on('zoomend',function () {
@@ -136,7 +137,7 @@ module.exports = {
                     vm.$el.classList.remove('hideLabels');
                 }
             });
-/*
+
             vm.map.on('click', vm.stopAnim);
             vm.map.on('dragstart', vm.stopAnim);
 
@@ -146,7 +147,7 @@ module.exports = {
                 for (var i = 0; i < controls.length; i++) {
                     controls[i].addEventListener('click',vm.stopAnim);
                 }
-            });*/
+            });
     /*
             var mapLink = 
                 '<a href="http://www.esri.com/">Esri</a>';
