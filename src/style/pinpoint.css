@@ -225,10 +225,14 @@
     background-color: #007ec5;
     color: white; }
 
-.map-outer.inactive:hover .image-interactive-icon {
-  display: none; }
-  .map-outer.inactive:hover .image-interactive-icon.image-interactive-icon-hover {
-    display: block; }
+@media (min-width: 700px) {
+
+  .map-outer.inactive:hover .image-interactive-icon {
+    display: none; }
+    .map-outer.inactive:hover .image-interactive-icon.image-interactive-icon-hover {
+      display: block; }
+
+}
 
 .pinpoint-geojson, .pinpoint-geojson.dashed, .pinpoint-geojson.dashed-clockwise, .pinpoint-geojson.dashed-anticlockwise {
   stroke: #777;
