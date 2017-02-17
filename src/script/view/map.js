@@ -18,8 +18,11 @@ module.exports = {
         showSchool: function () {
             var vm = this;
 
+            if (this.schoolIndex >= this.schools.length) {
+                this.schoolIndex = 0;
+            }
+
             if (this.schools.length === 0 ||
-                this.schoolIndex >= this.schools.length ||
                 !this.schools[this.schoolIndex].name ||
                 this.schools[this.schoolIndex].name === '') {
                 return;
@@ -71,25 +74,27 @@ module.exports = {
         },
         initPlaces: function () {
             var vm = this;
+/*
+            var GoogleSearch = L.control({
+                position: 'topright'
+            });
 
-            var GoogleSearch = L.Control.extend({
-              onAdd: function() {
+            GoogleSearch.onAdd = function() {
                 var element = document.createElement("input");
 
                 element.id = "searchBox";
-                element.placeholder = 'Search for a place';
+                element.placeholder = 'Search for a school or location';
 
                 return element;
-              }
-            });
+            };
 
-            var gs = (new GoogleSearch()).addTo(vm.map);
+            var gs = GoogleSearch.addTo(vm.map);*/
 
             var input = document.getElementById('searchBox');
 
             input.addEventListener('focus',vm.stopAnim);
 
-            L.DomEvent.disableClickPropagation(input);
+            //L.DomEvent.disableClickPropagation(input);
 
             var searchBox = new google.maps.places.SearchBox(input);
 
@@ -99,6 +104,8 @@ module.exports = {
               if (places.length === 0) {
                 return;
               }
+
+              vm.enableInteraction();
 
               var group = L.featureGroup();
 
@@ -117,10 +124,21 @@ module.exports = {
 
             });
         },
+        disableInteraction: function () {
+            this.anim = true;
+            this.$el.className += ' inactive';
+        },
+        enableInteraction: function () {
+            this.stopAnim();
+            var outer = this.$el;
+            outer.className = outer.className.replace(/inactive/g,'');
+        },
         init: function () {
             var vm = this;
 
-            vm.map = L.map(vm.$el,{
+            var mapEl = document.getElementById('map');
+
+            vm.map = L.map(mapEl,{ // vm.$el
                 minZoom: 9,
                 maxZoom: 16,
                 attributionControl: false,
@@ -131,10 +149,10 @@ module.exports = {
                 var zoom = vm.map.getZoom();
 
                 if (zoom < 16) {
-                    vm.$el.classList.add('hideLabels');
+                    mapEl.classList.add('hideLabels');
                 }
                 else {
-                    vm.$el.classList.remove('hideLabels');
+                    mapEl.classList.remove('hideLabels');
                 }
             });
 
