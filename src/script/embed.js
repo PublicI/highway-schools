@@ -85,8 +85,16 @@
             }
         }
 
+        var scrollMonitor = require('scrollmonitor');
+
+        var elementWatcher = null;
+
+        if (typeof iframe !== 'undefined' && iframe.contentWindow) {
+            elementWatcher = scrollMonitor.create( iframe );
+        }
+
         function receiveMessage(event) {
-            if (elementWatcher.isInViewport) {
+            if (typeof iframe !== 'undefined' && iframe.contentWindow && elementWatcher.isInViewport) {
                 iframe.contentWindow.postMessage({
                     anim: true
                 },'*');
@@ -99,9 +107,6 @@
         window.addEventListener('message', receiveMessage, false);
 
         if (typeof iframe !== 'undefined' && iframe.contentWindow) {
-            var scrollMonitor = require('scrollmonitor');
-
-            var elementWatcher = scrollMonitor.create( iframe );
 
             elementWatcher.enterViewport(function() {
                 iframe.contentWindow.postMessage({
