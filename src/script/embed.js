@@ -95,6 +95,24 @@
         }
         window.addEventListener('message', receiveMessage, false);
 
+        if (typeof iframe !== 'undefined' && iframe.contentWindow) {
+            var scrollMonitor = require('scrollmonitor');
+
+            var elementWatcher = scrollMonitor.create( iframe );
+
+            elementWatcher.enterViewport(function() {
+                iframe.contentWindow.postMessage({
+                    anim: true
+                },'*');
+            });
+            elementWatcher.exitViewport(function() {
+                iframe.contentWindow.postMessage({
+                    anim: false
+                },'*');
+            });
+
+        }
+
         // var pymParent = new pym.Parent('highwaySchools', prefix + 'embed.html#' + view + topmatter, {});
 
         // var pymScroll = new pym.Scroll(pymParent);

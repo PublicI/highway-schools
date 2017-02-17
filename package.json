@@ -59,6 +59,7 @@
     "raw-loader": "^0.5.1",
     "readdir-recursive": "0.0.4",
     "request": "^2.72.0",
+    "scrollmonitor": "^1.2.3",
     "sequelize": "^3.24.3",
     "serve-favicon": "^2.3.0",
     "tabletop": "^1.5.1",

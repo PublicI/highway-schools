@@ -8,7 +8,8 @@ module.exports = {
         return {
             map: null,
             schoolIndex: 0,
-            anim: true
+            anim: false,
+            animManualStop: false
         };
     },
     vuex: require('../model/schools'),
@@ -71,6 +72,7 @@ module.exports = {
         },
         stopAnim: function () {
             this.anim = false;
+            this.animManualStop = true;
         },
         initPlaces: function () {
             var vm = this;
@@ -242,6 +244,13 @@ module.exports = {
             }).addTo(vm.map);
 
             vm.showSchool();
+
+            function receiveMessage(event) {
+                if (event.data && event.data.anim !== null && !vm.animManualStop) {
+                    vm.anim = event.data.anim;
+                }
+            }
+            window.addEventListener('message', receiveMessage, false);
 
             setInterval(vm.nextSchool,5000);
 
