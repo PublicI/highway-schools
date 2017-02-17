@@ -86,9 +86,12 @@
         }
 
         function receiveMessage(event) {
-            if (event.data && event.data.route) {
-                window.location.hash = event.data.route;
+            if (elementWatcher.isInViewport) {
+                iframe.contentWindow.postMessage({
+                    anim: true
+                },'*');
             }
+
             if (typeof iframe !== 'undefined' && iframe) {
                 oembedResizeIframe([iframe], event.data);
             }
