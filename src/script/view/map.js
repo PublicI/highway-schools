@@ -136,7 +136,7 @@ module.exports = {
                     vm.$el.classList.remove('hideLabels');
                 }
             });
-
+/*
             vm.map.on('click', vm.stopAnim);
             vm.map.on('dragstart', vm.stopAnim);
 
@@ -146,7 +146,7 @@ module.exports = {
                 for (var i = 0; i < controls.length; i++) {
                     controls[i].addEventListener('click',vm.stopAnim);
                 }
-            });
+            });*/
     /*
             var mapLink = 
                 '<a href="http://www.esri.com/">Esri</a>';
@@ -235,7 +235,7 @@ module.exports = {
     },
     mounted: function () {
         var vm = this;
-        
+
         // require.ensure([], function(require) {
         vm.init();
         // }, 'leaflet');
