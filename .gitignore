@@ -14,3 +14,4 @@ src/data/tiles
 src/data/**/*.osm
 src/img/schools/*.png
 !src/data/hightrafficschools2.csv
+!src/data/featuredschools.csv
