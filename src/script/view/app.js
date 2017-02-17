@@ -21,18 +21,20 @@ module.exports = {
     staticRenderFns: template.staticRenderFns,
     created: function () {
         pym.init();
-    },
+    }
+    /*
     mounted: function () {
+        
         if (this.$route.query.topmatter && this.$route.query.topmatter === 'true') {
             this.topmatter = true;
         }
         if (this.$route.query.hash && this.$route.query.hash === 'true') {
             this.hash = true;
         }
-/*
+
         this.$nextTick(function () {
             pym.sendHeight();
-        });*/
+        });
         
         // this.retrieve();
     },
@@ -43,5 +45,5 @@ module.exports = {
             }
             pym.scrollTo(this.topmatter ? 200 : 20);
         }
-    }
+    }*/
 };

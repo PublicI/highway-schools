@@ -74,12 +74,13 @@
                 if (data.height) {
                     els[i].style.height = data.height + 'px';
                 }
+                /*
                 if (typeof data.scrollTo !== 'undefined' && data.scrollTo !== null) {
                     var elPos = els[i].getBoundingClientRect().top + window.pageYOffset;
 
                     var totalOffset = elPos + parseInt(data.scrollTo);
                     window.scrollTo(0, totalOffset);
-                }
+                }*/
             }
         }
 
