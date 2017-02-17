@@ -173,15 +173,16 @@ module.exports = {
                 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';*/
 
             L.tileLayer(
-                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 // attribution: '&copy; '+mapLink+', '+wholink,
                 minZoom: 9,
                 maxZoom: 11,
                 opacity: 0.85,
+                detectRetina: true
             }).addTo(vm.map);
 
             L.tileLayer(
-                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 // attribution: '&copy; '+mapLink+', '+wholink,
                 minZoom: 12, // 11
                 // maxZoom: 16,
