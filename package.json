@@ -75,6 +75,7 @@
     "webpack": "^2.2.1",
     "whatwg-fetch": "^2.0.2"
   },
+  "license": "MIT",
   "scripts": {
     "start": "supervisor -i node_modules,src/script -e js,sql node src/app.js"
   }
